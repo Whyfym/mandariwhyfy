@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whyfy打字 — Latihan Mengetik Hanzi HSK 1-5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDE6D4;
+    --paper-deep:#E2D9C2;
+    --ink:#211D18;
+    --ink-soft:#4A443C;
+    --seal:#AE1F2C;
+    --seal-deep:#8C1721;
+    --jade:#3C6E52;
+    --brass:#A9822A;
+    --line: rgba(33,29,24,.28);
+    --line-soft: rgba(33,29,24,.14);
+    --radius: 4px;
+    --shadow: 0 1px 0 rgba(33,29,24,.06), 0 8px 24px rgba(33,29,24,.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 34px 34px;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px 80px;}
+  header.site{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 0 18px;border-bottom:2px solid var(--ink);
+    max-width:980px;margin:0 auto;padding-left:24px;padding-right:24px;
+    flex-wrap:wrap;gap:10px;
+  }
+  .logo{display:flex;align-items:baseline;gap:10px;cursor:pointer;}
+  .logo .mark{
+    font-family:'Noto Serif SC',serif;font-weight:900;font-size:1.9rem;
+    color:var(--seal); letter-spacing:1px;
+  }
+  .logo .name{font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem;letter-spacing:.2px;}
+  .logo .name em{font-style:italic;color:var(--seal);}
+  .header-right{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  nav.top{display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;}
+  nav.top button{
+    background:none;border:none;cursor:pointer;color:var(--ink-soft);
+    padding:6px 2px;border-bottom:2px solid transparent;font-family:inherit;font-size:inherit;
+    letter-spacing:inherit;
+  }
+  nav.top button.active, nav.top button:hover{color:var(--ink);border-bottom-color:var(--seal);}
+  .student-pill{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;border:1.5px solid var(--ink);
+    background:var(--paper-deep);padding:5px 12px;display:flex;align-items:center;gap:8px;
+  }
+  .student-pill button{background:none;border:none;color:var(--seal);cursor:pointer;font-family:inherit;font-size:inherit;text-decoration:underline;padding:0;}
+
+  /* HOME */
+  .hero{padding:56px 0 34px;}
+  .hero .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--jade);margin-bottom:14px;display:block;
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.4rem);
+    line-height:1.06;margin:0 0 18px;max-width:780px;
+  }
+  .hero h1 .cn{font-family:'Noto Serif SC',serif;font-weight:900;color:var(--seal);}
+  .hero p.lede{font-size:1.05rem;line-height:1.65;color:var(--ink-soft);max-width:560px;margin:0 0 28px;}
+  .hero-panel{
+    border:2px solid var(--ink);background:var(--paper-deep);
+    padding:22px 24px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;
+    box-shadow:var(--shadow);
+  }
+  .grid-demo{display:flex;gap:6px;}
+  .grid-box{
+    position:relative;width:2.5rem;height:2.5rem;border:1.5px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif SC',serif;font-size:1.4rem;font-weight:700;
+    background:var(--paper);flex:none;
+  }
+  .grid-box.small{width:1.9rem;height:1.9rem;font-size:1.05rem;}
+  .grid-box::before{content:'';position:absolute;top:50%;left:2px;right:2px;border-top:1px dashed rgba(33,29,24,.32);}
+  .grid-box::after{content:'';position:absolute;left:50%;top:2px;bottom:2px;border-left:1px dashed rgba(33,29,24,.32);}
+  .hero-panel .cap{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);max-width:220px;}
+
+  .levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:36px 0;}
+  .lvl-card{
+    border:2px solid var(--ink);background:var(--paper);padding:20px;cursor:pointer;
+    position:relative;overflow:hidden;transition:transform .15s ease;box-shadow:var(--shadow);
+  }
+  .lvl-card:hover{transform:translateY(-3px);}
+  .lvl-card .num{
+    font-family:'Noto Serif SC',serif;font-weight:900;font-size:2.6rem;color:var(--line);
+    position:absolute;right:10px;top:2px;line-height:1;
+  }
+  .lvl-card h3{font-family:'Fraunces',serif;font-size:1.3rem;margin:0 0 4px;}
+  .lvl-card .sub{font-family:'JetBrains Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--seal);margin-bottom:10px;display:block;}
+  .lvl-card p{font-size:.9rem;color:var(--ink-soft);line-height:1.5;margin:0 0 14px;min-height:60px;}
+  .lvl-card .go{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink);border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;}
+  .best{font-size:.72rem;color:var(--jade);}
+
+  .section-title{font-family:'Fraunces',serif;font-size:1.5rem;margin:44px 0 6px;}
+  .section-title small{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ink-soft);display:block;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+  .howto{border-left:3px solid var(--brass);padding:6px 0 6px 18px;color:var(--ink-soft);font-size:.92rem;line-height:1.7;max-width:640px;}
+  .backlink{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:none;border:none;color:var(--ink-soft);cursor:pointer;padding:0;margin-bottom:6px;text-decoration:underline;}
+
+  /* LATIHAN GRID (per level) */
+  .latihan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:26px 0;}
+  .latihan-card{
+    border:1.5px solid var(--ink);background:var(--paper);padding:16px 18px;cursor:pointer;
+    box-shadow:var(--shadow);transition:transform .15s ease;position:relative;
+  }
+  .latihan-card:hover{transform:translateY(-2px);}
+  .latihan-card .lnum{
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--seal);letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:6px;display:block;
+  }
+  .latihan-card h4{font-family:'Fraunces',serif;font-size:1.05rem;margin:0 0 8px;}
+  .latihan-card .meta{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:8px;}
+
+  /* IDENTITY FORM */
+  .identity-wrap{max-width:520px;margin:50px auto 0;}
+  .identity-card{border:2px solid var(--ink);background:var(--paper-deep);padding:40px 36px;box-shadow:var(--shadow);}
+  .identity-card .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--jade);display:block;margin-bottom:10px;}
+  .identity-card h2{font-family:'Fraunces',serif;font-size:1.7rem;margin:0 0 6px;}
+  .identity-card .sub{color:var(--ink-soft);font-size:.92rem;margin:0 0 26px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:6px;}
+  .field input{
+    width:100%;padding:12px 14px;border:1.5px solid var(--ink);background:#fff;
+    font-family:'Inter',sans-serif;font-size:1rem;
+  }
+  .field input:focus{outline:2px solid var(--seal);outline-offset:1px;}
+  .form-error{color:var(--seal);font-size:.82rem;font-family:'JetBrains Mono',monospace;margin:-8px 0 16px;}
+
+  /* PRACTICE */
+  .practice-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:34px 0 22px;}
+  .badge{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    border:1.5px solid var(--ink);padding:4px 10px;background:var(--paper-deep);
+  }
+  .stat-row{display:flex;gap:14px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);}
+  .stat-row b{color:var(--ink);}
+  .progress-bar{height:6px;background:var(--paper-deep);border:1px solid var(--ink);margin-bottom:30px;}
+  .progress-bar > div{height:100%;background:var(--seal);transition:width .25s ease;}
+
+  .card{
+    border:2px solid var(--ink);background:var(--paper);box-shadow:var(--shadow);
+    padding:34px 32px;position:relative;
+  }
+  .qnote{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--jade);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;}
+  .qtext{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:1.6rem;line-height:1.45;margin:0 0 26px;max-width:640px;}
+  .input-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;}
+  textarea#answerInput{
+    flex:1;min-width:240px;font-family:'Noto Serif SC',serif;font-size:1.5rem;
+    padding:14px 16px;border:1.5px solid var(--ink);background:#fff;resize:none;height:64px;
+  }
+  textarea#answerInput:focus{outline:2px solid var(--seal);outline-offset:1px;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:.92rem;
+    border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);
+    padding:14px 22px;cursor:pointer;letter-spacing:.01em;
+  }
+  .btn:hover{background:var(--seal-deep);border-color:var(--seal-deep);}
+  .btn.ghost{background:transparent;color:var(--ink);}
+  .btn.ghost:hover{background:var(--paper-deep);color:var(--ink);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn:focus-visible, button:focus-visible, textarea:focus-visible, input:focus-visible{outline:2px solid var(--seal);outline-offset:2px;}
+
+  .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+
+  .feedback{margin-top:26px;padding-top:22px;border-top:1.5px dashed var(--line);}
+  .feedback.correct .verdict{color:var(--jade);}
+  .feedback.wrong .verdict{color:var(--seal);}
+  .verdict{font-family:'Fraunces',serif;font-weight:700;font-size:1.2rem;display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .stamp{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:2.1rem;height:2.1rem;border:3px double var(--jade);color:var(--jade);
+    border-radius:50%;font-family:'Noto Serif SC',serif;font-weight:900;font-size:1.1rem;
+    transform:rotate(-8deg);
+  }
+  .feedback.wrong .stamp{border-color:var(--seal);color:var(--seal);}
+  .answer-grids{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px;}
+  .answer-alt{font-size:.85rem;color:var(--ink-soft);margin-top:6px;}
+  .answer-alt b{color:var(--ink);font-family:'Noto Serif SC',serif;font-weight:600;}
+
+  /* SUMMARY */
+  .summary-card{border:2px solid var(--ink);background:var(--paper-deep);padding:50px 40px;text-align:center;box-shadow:var(--shadow);}
+  .summary-card .big{font-family:'Fraunces',serif;font-size:3rem;margin:0;}
+  .summary-card .lvl{font-family:'JetBrains Mono',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--seal);}
+  .summary-card p{color:var(--ink-soft);}
+  .summary-card .who{font-family:'Fraunces',serif;font-size:1.1rem;margin-top:-6px;}
+
+  /* VOCAB */
+  .vocab-toolbar{display:flex;gap:8px;margin:30px 0 20px;flex-wrap:wrap;}
+  .chip{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:7px 14px;
+    border:1.5px solid var(--ink);background:var(--paper);cursor:pointer;
+  }
+  .chip.active{background:var(--ink);color:var(--paper);}
+  table.vocab{width:100%;border-collapse:collapse;font-size:.94rem;}
+  table.vocab th{
+    text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--ink-soft);border-bottom:2px solid var(--ink);padding:8px 10px;
+  }
+  table.vocab td{padding:10px 10px;border-bottom:1px solid var(--line-soft);}
+  table.vocab td.hz{font-family:'Noto Serif SC',serif;font-size:1.3rem;font-weight:600;width:70px;}
+
+  footer.site{margin-top:60px;padding-top:20px;border-top:2px solid var(--ink);font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+  @media (max-width:640px){
+    .card{padding:24px 18px;}
+    .qtext{font-size:1.3rem;}
+    .hero-panel{flex-direction:column;align-items:flex-start;}
+    .identity-card{padding:28px 22px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important;}
+  }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="logo" onclick="goHome()">
+    <span class="mark">字</span>
+    <span class="name">Whyfy<em>打字</em></span>
+  </div>
+  <div class="header-right">
+    <div id="studentPillHolder"></div>
+    <nav class="top">
+      <button id="navHome" class="active" onclick="goHome()">Beranda</button>
+      <button id="navVocab" onclick="goVocab()">Kosakata</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============ DATA ============ */
+const LEVELS = [
+  {id:1, label:'HSK 1', sub:'Fondasi', desc:'是/有/吗, kata ganti, angka + kata bantu bilangan, kalimat inti yang sangat sederhana.'},
+  {id:2, label:'HSK 2', sub:'Pemula Lanjut', desc:'了, 在 (sedang), 会/得, perbandingan 比, 因为...所以, 觉得.'},
+  {id:3, label:'HSK 3', sub:'Menengah Awal', desc:'把-sentence, 被 (pasif), 虽然...但是, 一边...一边, 越来越, 除了...以外.'},
+  {id:4, label:'HSK 4', sub:'Menengah', desc:'尽管...还是, 不但...而且, 只有...才, 无论...都, 由于, 与其...不如.'},
+  {id:5, label:'HSK 5', sub:'Menengah Lanjut', desc:'即使...也, 万一, 除非...否则, 与其说...不如说, 甚至, 何况, 何必.'}
+];
+
+/* QUESTIONS[level] = array of 10 latihan; each latihan = {title, note, items:[{id_text, answers}]} */
+const QUESTIONS = {
+  1:[
+    {title:'Latihan 1', note:'是 / 不是', items:[
+      {id_text:'Saya adalah murid.', answers:['我是学生']},
+      {id_text:'Dia adalah dokter.', answers:['他是医生','她是医生']},
+      {id_text:'Kami bukan guru.', answers:['我们不是老师']},
+      {id_text:'Dia bukan orang Amerika.', answers:['他不是美国人','她不是美国人']},
+      {id_text:'Ini adalah rumahku.', answers:['这是我的家']}
+    ]},
+    {title:'Latihan 2', note:'有 / 没有', items:[
+      {id_text:'Aku punya seekor anjing.', answers:['我有一只狗']},
+      {id_text:'Dia tidak punya mobil.', answers:['他没有车','她没有车']},
+      {id_text:'Kami punya banyak teman.', answers:['我们有很多朋友']},
+      {id_text:'Aku tidak punya uang.', answers:['我没有钱']},
+      {id_text:'Dia punya dua anak.', answers:['他有两个孩子','她有两个孩子']}
+    ]},
+    {title:'Latihan 3', note:'angka + kata bantu bilangan', items:[
+      {id_text:'Aku punya empat kursi.', answers:['我有四把椅子']},
+      {id_text:'Dia membeli lima apel.', answers:['他买了五个苹果','她买了五个苹果']},
+      {id_text:'Kami punya tiga anjing.', answers:['我们有三只狗']},
+      {id_text:'Aku ingin satu cangkir teh.', answers:['我要一杯茶']},
+      {id_text:'Dia punya enam buku.', answers:['他有六本书','她有六本书']}
+    ]},
+    {title:'Latihan 4', note:'的 (kepemilikan/atribut)', items:[
+      {id_text:'Ini bukan mobilku.', answers:['这不是我的车']},
+      {id_text:'Itu adalah tas kakak perempuanku.', answers:['那是我姐姐的包']},
+      {id_text:'Ini adalah rumah kami.', answers:['这是我们的家']},
+      {id_text:'Itu adalah buku milik guru.', answers:['那是老师的书']},
+      {id_text:'Ini adalah kucing milik temanku.', answers:['这是我朋友的猫']}
+    ]},
+    {title:'Latihan 5', note:'吗 (pertanyaan ya/tidak)', items:[
+      {id_text:'Apakah kamu punya waktu?', answers:['你有时间吗']},
+      {id_text:'Apakah dia guru?', answers:['他是老师吗','她是老师吗']},
+      {id_text:'Apakah kamu suka kopi?', answers:['你喜欢咖啡吗']},
+      {id_text:'Apakah ini rumahmu?', answers:['这是你的家吗']},
+      {id_text:'Apakah mereka murid?', answers:['他们是学生吗']}
+    ]},
+    {title:'Latihan 6', note:'谁 / 什么 / 哪', items:[
+      {id_text:'Ini apa?', answers:['这是什么']},
+      {id_text:'Siapa dia?', answers:['他是谁','她是谁']},
+      {id_text:'Kamu suka warna apa?', answers:['你喜欢什么颜色']},
+      {id_text:'Kamu orang mana?', answers:['你是哪国人']},
+      {id_text:'Buku siapa ini?', answers:['这是谁的书']}
+    ]},
+    {title:'Latihan 7', note:'喜欢 + kata kerja/benda', items:[
+      {id_text:'Aku suka membaca buku.', answers:['我喜欢看书']},
+      {id_text:'Dia suka makan buah.', answers:['他喜欢吃水果','她喜欢吃水果']},
+      {id_text:'Kami suka bahasa Mandarin.', answers:['我们喜欢汉语','我们喜欢中文']},
+      {id_text:'Aku tidak suka kopi.', answers:['我不喜欢咖啡']},
+      {id_text:'Dia suka mendengarkan musik.', answers:['他喜欢听音乐','她喜欢听音乐']}
+    ]},
+    {title:'Latihan 8', note:'在 (lokasi)', items:[
+      {id_text:'Aku ada di rumah.', answers:['我在家']},
+      {id_text:'Dia ada di kantor.', answers:['他在办公室','她在办公室']},
+      {id_text:'Buku itu ada di atas meja.', answers:['书在桌子上']},
+      {id_text:'Kami ada di sekolah.', answers:['我们在学校']},
+      {id_text:'Kucing itu ada di bawah kursi.', answers:['猫在椅子下面']}
+    ]},
+    {title:'Latihan 9', note:'想 + kata kerja', items:[
+      {id_text:'Aku ingin pergi ke Beijing.', answers:['我想去北京']},
+      {id_text:'Dia ingin belajar bahasa Mandarin.', answers:['他想学汉语','她想学汉语','他想学中文','她想学中文']},
+      {id_text:'Kami ingin makan mi.', answers:['我们想吃面条']},
+      {id_text:'Aku ingin minum air.', answers:['我想喝水']},
+      {id_text:'Dia ingin menonton film.', answers:['他想看电影','她想看电影']}
+    ]},
+    {title:'Latihan 10', note:'几 / 多少', items:[
+      {id_text:'Kamu punya berapa buku?', answers:['你有几本书']},
+      {id_text:'Sekarang jam berapa?', answers:['现在几点']},
+      {id_text:'Berapa harga ini?', answers:['这个多少钱']},
+      {id_text:'Ada berapa orang?', answers:['有几个人']},
+      {id_text:'Kamu punya berapa uang?', answers:['你有多少钱']}
+    ]}
+  ],
+  2:[
+    {title:'Latihan 1', note:'了 (aksi selesai)', items:[
+      {id_text:'Aku sudah makan.', answers:['我吃了','我吃饭了']},
+      {id_text:'Dia sudah pergi ke sekolah.', answers:['他去学校了','她去学校了']},
+      {id_text:'Kami sudah membeli buku itu.', answers:['我们买那本书了','我们买了那本书']},
+      {id_text:'Aku sudah selesai menulis surat.', answers:['我写完信了','我写完了信']},
+      {id_text:'Dia sudah bangun.', answers:['他起床了','她起床了']}
+    ]},
+    {title:'Latihan 2', note:'在 + kata kerja (sedang)', items:[
+      {id_text:'Aku sedang belajar bahasa Mandarin.', answers:['我在学汉语','我在学中文']},
+      {id_text:'Dia sedang memasak.', answers:['他在做饭','她在做饭']},
+      {id_text:'Kami sedang menunggu bis.', answers:['我们在等公共汽车']},
+      {id_text:'Aku sedang menulis surat.', answers:['我在写信']},
+      {id_text:'Dia sedang mendengarkan musik.', answers:['他在听音乐','她在听音乐']}
+    ]},
+    {title:'Latihan 3', note:'会 / 能 / 可以', items:[
+      {id_text:'Aku bisa berenang.', answers:['我会游泳']},
+      {id_text:'Dia tidak bisa datang besok.', answers:['他明天不能来','她明天不能来']},
+      {id_text:'Kamu boleh masuk.', answers:['你可以进来']},
+      {id_text:'Aku bisa memasak masakan Tiongkok.', answers:['我会做中国菜']},
+      {id_text:'Kami bisa selesai hari ini.', answers:['我们今天能做完']}
+    ]},
+    {title:'Latihan 4', note:'比 (perbandingan)', items:[
+      {id_text:'Dia lebih tinggi daripada aku.', answers:['他比我高','她比我高']},
+      {id_text:'Kopi ini lebih enak daripada teh itu.', answers:['这个咖啡比那个茶好喝']},
+      {id_text:'Temanku lebih muda daripada aku.', answers:['我朋友比我小']},
+      {id_text:'Hari ini lebih panas daripada kemarin.', answers:['今天比昨天热']},
+      {id_text:'Buku ini lebih tebal daripada itu.', answers:['这本书比那本厚']}
+    ]},
+    {title:'Latihan 5', note:'因为...所以', items:[
+      {id_text:'Karena aku sakit, jadi aku tidak pergi ke sekolah.', answers:['因为我生病了,所以我没去学校']},
+      {id_text:'Karena dia sibuk, jadi dia tidak bisa datang.', answers:['因为他很忙,所以他不能来','因为她很忙,所以她不能来']},
+      {id_text:'Karena hari ini hujan, jadi kami tinggal di rumah.', answers:['因为今天下雨,所以我们在家','因为今天下雨,所以我们呆在家里']},
+      {id_text:'Karena aku lapar, jadi aku makan mi.', answers:['因为我饿了,所以我吃面条']},
+      {id_text:'Karena dia belajar rajin, jadi nilainya bagus.', answers:['因为他学习很努力,所以成绩很好','因为她学习很努力,所以成绩很好']}
+    ]},
+    {title:'Latihan 6', note:'觉得 + kata sifat', items:[
+      {id_text:'Aku rasa film ini menarik.', answers:['我觉得这个电影很有意思']},
+      {id_text:'Dia rasa makanan ini enak.', answers:['他觉得这个菜很好吃','她觉得这个菜很好吃']},
+      {id_text:'Kami rasa ujian ini sulit.', answers:['我们觉得这个考试很难']},
+      {id_text:'Aku rasa kamar ini kecil.', answers:['我觉得这个房间很小']},
+      {id_text:'Dia rasa buku itu membosankan.', answers:['他觉得那本书很无聊','她觉得那本书很无聊']}
+    ]},
+    {title:'Latihan 7', note:'别 (larangan)', items:[
+      {id_text:'Jangan makan di sini.', answers:['别在这儿吃东西','别在这里吃东西']},
+      {id_text:'Jangan khawatir.', answers:['别担心']},
+      {id_text:'Jangan lupa bawa payung.', answers:['别忘了带雨伞']},
+      {id_text:'Jangan buang sampah di sini.', answers:['别在这儿扔垃圾','别在这里扔垃圾']},
+      {id_text:'Jangan pergi terlalu larut.', answers:['别去得太晚','别太晚走']}
+    ]},
+    {title:'Latihan 8', note:'得 (keharusan)', items:[
+      {id_text:'Aku harus selesaikan pekerjaan rumahku.', answers:['我得做完作业']},
+      {id_text:'Dia harus pergi ke rumah sakit.', answers:['他得去医院','她得去医院']},
+      {id_text:'Kami harus bangun pagi-pagi.', answers:['我们得早起']},
+      {id_text:'Aku harus belajar untuk ujian.', answers:['我得准备考试','我得为考试学习']},
+      {id_text:'Dia harus pulang sebelum jam sembilan.', answers:['他得九点以前回家','她得九点以前回家']}
+    ]},
+    {title:'Latihan 9', note:'先...再', items:[
+      {id_text:'Kamu cuci tangan dulu, lalu makan.', answers:['你先洗手,再吃饭']},
+      {id_text:'Aku selesaikan pekerjaan dulu, lalu istirahat.', answers:['我先做完工作,再休息']},
+      {id_text:'Kita beli tiket dulu, lalu masuk.', answers:['我们先买票,再进去']},
+      {id_text:'Dia mandi dulu, lalu tidur.', answers:['他先洗澡,再睡觉','她先洗澡,再睡觉']},
+      {id_text:'Kamu pikirkan dulu, lalu jawab.', answers:['你先想,再回答']}
+    ]},
+    {title:'Latihan 10', note:'已经...了 / 还没', items:[
+      {id_text:'Aku sudah selesai makan.', answers:['我已经吃完了']},
+      {id_text:'Dia belum bangun.', answers:['他还没起床','她还没起床']},
+      {id_text:'Sudah jam delapan, tapi dia belum datang.', answers:['已经八点了,可是他还没来','已经八点了,但是他还没来','已经八点了,可是她还没来','已经八点了,但是她还没来']},
+      {id_text:'Aku sudah membaca buku itu.', answers:['我已经看那本书了','我已经看了那本书']},
+      {id_text:'Dia belum makan.', answers:['他还没吃饭','她还没吃饭']}
+    ]}
+  ],
+  3:[
+    {title:'Latihan 1', note:'把-sentence', items:[
+      {id_text:'Tolong taruh buku itu di atas meja.', answers:['请把那本书放在桌子上']},
+      {id_text:'Aku sudah menutup pintu itu.', answers:['我把那扇门关了','我把那扇门关上了']},
+      {id_text:'Tolong berikan air itu padaku.', answers:['请把那杯水给我']},
+      {id_text:'Dia sudah menulis kalimat itu di papan.', answers:['他把那个句子写在黑板上了','她把那个句子写在黑板上了']},
+      {id_text:'Aku sudah menaruh kunci itu di tas.', answers:['我把那把钥匙放在包里了']}
+    ]},
+    {title:'Latihan 2', note:'被 (pasif)', items:[
+      {id_text:'Kue itu sudah dimakan olehnya.', answers:['蛋糕被他吃了','蛋糕被她吃了']},
+      {id_text:'Sepeda itu dicuri oleh seseorang.', answers:['自行车被人偷了']},
+      {id_text:'Gelas itu dipecahkan oleh temanku.', answers:['杯子被我朋友打破了']},
+      {id_text:'Surat itu sudah dikirim olehnya.', answers:['信被他寄了','信被她寄了']},
+      {id_text:'Pintu itu dibuka oleh angin.', answers:['门被风吹开了']}
+    ]},
+    {title:'Latihan 3', note:'虽然...但是/还是', items:[
+      {id_text:'Walaupun hujan, kami tetap pergi ke sekolah.', answers:['虽然下雨,但是我们还是去学校']},
+      {id_text:'Walaupun dia lelah, dia tetap bekerja.', answers:['虽然他很累,但是他还是工作','虽然她很累,但是她还是工作']},
+      {id_text:'Walaupun harganya mahal, aku tetap membelinya.', answers:['虽然很贵,但是我还是买了']},
+      {id_text:'Walaupun sulit, dia tetap belajar dengan rajin.', answers:['虽然很难,但是他还是努力学习','虽然很难,但是她还是努力学习']},
+      {id_text:'Walaupun sudah malam, mereka tetap belum tidur.', answers:['虽然已经很晚了,但是他们还没睡觉']}
+    ]},
+    {title:'Latihan 4', note:'一边...一边', items:[
+      {id_text:'Dia sambil makan sambil menonton TV.', answers:['他一边吃饭一边看电视','她一边吃饭一边看电视']},
+      {id_text:'Aku sambil berjalan sambil mendengarkan musik.', answers:['我一边走路一边听音乐']},
+      {id_text:'Kami sambil belajar sambil mendengarkan lagu.', answers:['我们一边学习一边听歌']},
+      {id_text:'Dia sambil memasak sambil menelepon.', answers:['他一边做饭一边打电话','她一边做饭一边打电话']},
+      {id_text:'Aku sambil minum kopi sambil membaca koran.', answers:['我一边喝咖啡一边看报纸']}
+    ]},
+    {title:'Latihan 5', note:'越来越', items:[
+      {id_text:'Cuacanya semakin lama semakin panas.', answers:['天气越来越热了','天气越来越热']},
+      {id_text:'Bahasa Mandarinnya semakin lama semakin bagus.', answers:['他的汉语越来越好了','她的汉语越来越好了']},
+      {id_text:'Kotanya semakin lama semakin ramai.', answers:['这个城市越来越热闹了']},
+      {id_text:'Pekerjaannya semakin lama semakin banyak.', answers:['工作越来越多了']},
+      {id_text:'Anak itu semakin lama semakin tinggi.', answers:['这个孩子越来越高了']}
+    ]},
+    {title:'Latihan 6', note:'除了...以外,还', items:[
+      {id_text:'Selain bahasa Inggris, dia juga bisa bahasa Mandarin.', answers:['除了英语以外,他还会说汉语','除了英语以外,她还会说汉语']},
+      {id_text:'Selain buku ini, aku juga membeli itu.', answers:['除了这本书以外,我还买了那本']},
+      {id_text:'Selain nasi, kami juga makan sayur.', answers:['除了米饭以外,我们还吃蔬菜']},
+      {id_text:'Selain akhir pekan, dia juga bekerja pada hari libur.', answers:['除了周末以外,他还在假期工作','除了周末以外,她还在假期工作']},
+      {id_text:'Selain kopi, aku juga suka teh.', answers:['除了咖啡以外,我还喜欢茶']}
+    ]},
+    {title:'Latihan 7', note:'或者 vs 还是', items:[
+      {id_text:'Kita bisa naik bis, atau bisa jalan kaki.', answers:['我们可以坐公共汽车,或者可以走路','我们可以坐公共汽车,或者走路']},
+      {id_text:'Kamu mau kopi atau teh?', answers:['你要咖啡还是茶']},
+      {id_text:'Nanti malam kita nonton film, atau makan malam di luar.', answers:['今晚我们看电影,或者在外面吃饭']},
+      {id_text:'Kamu pergi hari ini atau besok?', answers:['你今天去还是明天去']},
+      {id_text:'Dia bisa naik kereta atau pesawat.', answers:['他可以坐火车,或者坐飞机','她可以坐火车,或者坐飞机']}
+    ]},
+    {title:'Latihan 8', note:'好像', items:[
+      {id_text:'Dia sepertinya tidak senang.', answers:['他好像不高兴','她好像不高兴']},
+      {id_text:'Sepertinya akan hujan.', answers:['好像要下雨了']},
+      {id_text:'Dia sepertinya sudah pergi.', answers:['他好像已经走了','她好像已经走了']},
+      {id_text:'Rasanya aku pernah melihat dia.', answers:['我好像见过他','我好像见过她']},
+      {id_text:'Sepertinya dia lupa.', answers:['他好像忘了','她好像忘了']}
+    ]},
+    {title:'Latihan 9', note:'顺便', items:[
+      {id_text:'Kalau kamu pergi ke toko, tolong sekalian belikan aku roti.', answers:['你去商店的时候,顺便帮我买面包']},
+      {id_text:'Kalau aku pergi ke kantor pos, aku akan sekalian mengirim surat ini.', answers:['我去邮局的时候,顺便寄这封信']},
+      {id_text:'Kalau kamu ke perpustakaan, tolong sekalian kembalikan buku ini.', answers:['你去图书馆的时候,顺便还这本书']},
+      {id_text:'Kalau kita keluar, kita sekalian beli sayur.', answers:['我们出去的时候,顺便买菜']},
+      {id_text:'Kalau kamu ke dapur, tolong sekalian bawakan segelas air.', answers:['你去厨房的时候,顺便带杯水来']}
+    ]},
+    {title:'Latihan 10', note:'pelengkap potensial 得/不', items:[
+      {id_text:'Aku tidak paham apa yang dia katakan.', answers:['我听不懂他说的话','我听不懂她说的话']},
+      {id_text:'Aku bisa mengerti bahasa Mandarin yang dia ucapkan.', answers:['我听得懂他说的汉语','我听得懂她说的汉语']},
+      {id_text:'Dia tidak bisa membaca huruf ini.', answers:['他看不懂这个字','她看不懂这个字']},
+      {id_text:'Aku bisa menemukan jalan itu.', answers:['我找得到那条路']},
+      {id_text:'Kami tidak bisa menyelesaikan pekerjaan ini hari ini.', answers:['我们今天做不完这个工作']}
+    ]}
+  ],
+  4:[
+    {title:'Latihan 1', note:'尽管...还是', items:[
+      {id_text:'Meskipun dia sudah berusaha keras, dia tetap gagal dalam ujian.', answers:['尽管他很努力,还是没有通过考试','尽管她很努力,还是没有通过考试']},
+      {id_text:'Meskipun cuaca dingin, dia tetap pergi berolahraga.', answers:['尽管天气很冷,他还是去运动了','尽管天气很冷,她还是去运动了']},
+      {id_text:'Meskipun sudah diperingatkan, dia tetap melakukan kesalahan itu.', answers:['尽管被提醒了,他还是犯了那个错误','尽管被提醒了,她还是犯了那个错误']},
+      {id_text:'Meskipun jaraknya jauh, mereka tetap berjalan kaki ke sana.', answers:['尽管很远,他们还是走路去了那儿']},
+      {id_text:'Meskipun sangat lelah, dia tetap menyelesaikan pekerjaan itu.', answers:['尽管很累,他还是做完了那个工作','尽管很累,她还是做完了那个工作']}
+    ]},
+    {title:'Latihan 2', note:'不但...而且', items:[
+      {id_text:'Dia bukan hanya pintar, tapi juga rajin.', answers:['他不但聪明,而且很努力','她不但聪明,而且很努力']},
+      {id_text:'Restoran ini bukan hanya murah, tapi juga enak.', answers:['这家饭馆不但便宜,而且好吃']},
+      {id_text:'Dia bukan hanya bisa bahasa Mandarin, tapi juga bahasa Inggris.', answers:['他不但会说汉语,而且会说英语','她不但会说汉语,而且会说英语']},
+      {id_text:'Kota ini bukan hanya indah, tapi juga aman.', answers:['这个城市不但漂亮,而且安全']},
+      {id_text:'Dia bukan hanya membantu aku, tapi juga membantu teman-temanku.', answers:['他不但帮助了我,而且帮助了我的朋友们','她不但帮助了我,而且帮助了我的朋友们']}
+    ]},
+    {title:'Latihan 3', note:'只有...才', items:[
+      {id_text:'Hanya dengan berlatih setiap hari, kamu baru bisa menguasai bahasa Mandarin.', answers:['只有每天练习,你才能掌握汉语','只有每天练习,你才能掌握中文']},
+      {id_text:'Hanya kalau kamu bekerja keras, kamu baru bisa berhasil.', answers:['只有努力工作,你才能成功']},
+      {id_text:'Hanya dengan tiket ini, kamu baru bisa masuk.', answers:['只有这张票,你才能进去']},
+      {id_text:'Hanya kalau kamu meminta maaf, dia baru akan memaafkanmu.', answers:['只有你道歉,他才会原谅你','只有你道歉,她才会原谅你']},
+      {id_text:'Hanya dengan istirahat cukup, tubuh baru bisa sehat.', answers:['只有休息够,身体才会健康']}
+    ]},
+    {title:'Latihan 4', note:'无论...都', items:[
+      {id_text:'Tidak peduli seberapa sulit, dia selalu tetap tersenyum.', answers:['无论多难,他都一直微笑','无论多难,她都一直微笑']},
+      {id_text:'Tidak peduli siapa yang datang, aku akan menyambutnya.', answers:['无论谁来,我都会欢迎']},
+      {id_text:'Tidak peduli cuaca bagaimana, kami akan tetap pergi.', answers:['无论天气怎么样,我们都会去']},
+      {id_text:'Tidak peduli berapa harganya, dia tetap akan membelinya.', answers:['无论多贵,他都会买','无论多贵,她都会买']},
+      {id_text:'Tidak peduli di mana kamu berada, aku akan mencarimu.', answers:['无论你在哪儿,我都会找你']}
+    ]},
+    {title:'Latihan 5', note:'一旦...就', items:[
+      {id_text:'Begitu dia sampai, kami langsung mulai rapat.', answers:['一旦他到了,我们就开始开会','一旦她到了,我们就开始开会']},
+      {id_text:'Begitu hujan turun, jalanan langsung macet.', answers:['一旦下雨,路上就堵车']},
+      {id_text:'Begitu kamu memutuskan, jangan menyerah.', answers:['一旦你决定了,就不要放弃']},
+      {id_text:'Begitu dia pergi, aku langsung merasa kesepian.', answers:['一旦他走了,我就觉得孤单','一旦她走了,我就觉得孤单']},
+      {id_text:'Begitu masalah itu muncul, kita harus segera menyelesaikannya.', answers:['一旦问题出现,我们就得马上解决']}
+    ]},
+    {title:'Latihan 6', note:'既然...就', items:[
+      {id_text:'Karena kamu sudah memutuskan, aku tidak akan menghalangimu lagi.', answers:['既然你已经决定了,我就不再阻止你了']},
+      {id_text:'Karena sudah begini, kita terima saja.', answers:['既然已经这样了,我们就接受吧']},
+      {id_text:'Karena kamu tahu itu salah, jangan lakukan lagi.', answers:['既然你知道那是错的,就别再做了']},
+      {id_text:'Karena kamu tidak suka, kita jangan pergi ke sana.', answers:['既然你不喜欢,我们就不去那儿了']},
+      {id_text:'Karena semuanya sudah siap, kita mulai saja.', answers:['既然都准备好了,我们就开始吧']}
+    ]},
+    {title:'Latihan 7', note:'由于', items:[
+      {id_text:'Karena macet, dia terlambat datang ke kantor.', answers:['由于堵车,他上班迟到了','由于堵车,她上班迟到了']},
+      {id_text:'Karena hujan deras, pertandingan itu dibatalkan.', answers:['由于下大雨,比赛被取消了']},
+      {id_text:'Karena kurang tidur, dia merasa sangat lelah.', answers:['由于睡眠不够,他觉得很累','由于睡眠不够,她觉得很累']},
+      {id_text:'Karena harga naik, banyak orang tidak membeli itu.', answers:['由于价格上涨,很多人不买那个']},
+      {id_text:'Karena kesalahan itu, perusahaan mengalami kerugian.', answers:['由于那个错误,公司受到了损失']}
+    ]},
+    {title:'Latihan 8', note:'与其...不如', items:[
+      {id_text:'Daripada menunggu di sini, lebih baik kita cari cara lain.', answers:['与其在这儿等,不如我们想别的办法','与其在这里等,不如我们想别的办法']},
+      {id_text:'Daripada mengeluh, lebih baik kamu bertindak.', answers:['与其抱怨,不如你去做']},
+      {id_text:'Daripada membeli yang mahal, lebih baik kamu menyewa.', answers:['与其买贵的,不如你租一个']},
+      {id_text:'Daripada pergi sendiri, lebih baik kita pergi bersama.', answers:['与其一个人去,不如我们一起去']},
+      {id_text:'Daripada takut gagal, lebih baik kamu mencoba.', answers:['与其害怕失败,不如你去试试']}
+    ]},
+    {title:'Latihan 9', note:'宁可...也不', items:[
+      {id_text:'Dia lebih memilih tidak makan daripada makan makanan yang tidak enak.', answers:['他宁可不吃,也不吃不好吃的东西','她宁可不吃,也不吃不好吃的东西']},
+      {id_text:'Aku lebih memilih berjalan kaki daripada naik bis yang penuh sesak.', answers:['我宁可走路,也不坐挤的公共汽车']},
+      {id_text:'Dia lebih memilih diam daripada berbohong.', answers:['他宁可不说话,也不撒谎','她宁可不说话,也不撒谎']},
+      {id_text:'Kami lebih memilih menunggu daripada terburu-buru.', answers:['我们宁可等,也不着急']},
+      {id_text:'Aku lebih memilih rugi uang daripada kehilangan kepercayaan.', answers:['我宁可损失钱,也不失去信任']}
+    ]},
+    {title:'Latihan 10', note:'之所以...是因为', items:[
+      {id_text:'Alasan aku terlambat adalah karena jalanan macet.', answers:['我之所以迟到,是因为路上堵车']},
+      {id_text:'Alasan dia berhasil adalah karena dia bekerja keras.', answers:['他之所以成功,是因为他很努力','她之所以成功,是因为她很努力']},
+      {id_text:'Alasan aku belajar bahasa Mandarin adalah karena aku ingin bekerja di Tiongkok.', answers:['我之所以学汉语,是因为我想在中国工作']},
+      {id_text:'Alasan dia sedih adalah karena kehilangan pekerjaannya.', answers:['他之所以难过,是因为他失去了工作','她之所以难过,是因为她失去了工作']},
+      {id_text:'Alasan harga naik adalah karena permintaan meningkat.', answers:['价格之所以上涨,是因为需求增加了']}
+    ]}
+  ],
+  5:[
+    {title:'Latihan 1', note:'不仅如此', items:[
+      {id_text:'Bukan hanya itu, dia bahkan membantu semua tetangganya.', answers:['不仅如此,他还帮助了所有邻居','不仅如此,她还帮助了所有邻居']},
+      {id_text:'Bukan hanya itu, perusahaan itu juga memperluas pasarnya.', answers:['不仅如此,那家公司还扩大了市场']},
+      {id_text:'Bukan hanya itu, dia bahkan belajar bahasa lain.', answers:['不仅如此,他还学了别的语言','不仅如此,她还学了别的语言']},
+      {id_text:'Bukan hanya itu, mereka juga membangun sekolah baru.', answers:['不仅如此,他们还建了一所新学校']},
+      {id_text:'Bukan hanya itu, dia bahkan menulis sebuah buku.', answers:['不仅如此,他还写了一本书','不仅如此,她还写了一本书']}
+    ]},
+    {title:'Latihan 2', note:'与其说...不如说', items:[
+      {id_text:'Daripada dikatakan dia malas, lebih tepat dikatakan dia tidak punya semangat.', answers:['与其说他懒,不如说他没有动力','与其说她懒,不如说她没有动力']},
+      {id_text:'Daripada dikatakan ini keberuntungan, lebih tepat dikatakan ini hasil kerja keras.', answers:['与其说这是运气,不如说这是努力的结果']},
+      {id_text:'Daripada dikatakan dia marah, lebih tepat dikatakan dia kecewa.', answers:['与其说他生气,不如说他失望','与其说她生气,不如说她失望']},
+      {id_text:'Daripada dikatakan sulit, lebih tepat dikatakan butuh waktu.', answers:['与其说难,不如说需要时间']},
+      {id_text:'Daripada dikatakan itu masalah kecil, lebih tepat dikatakan itu masalah besar.', answers:['与其说那是小问题,不如说那是大问题']}
+    ]},
+    {title:'Latihan 3', note:'即使...也', items:[
+      {id_text:'Sekalipun kamu tidak setuju, aku tetap akan melakukannya.', answers:['即使你不同意,我也会做']},
+      {id_text:'Sekalipun hujan deras, dia tetap akan pergi.', answers:['即使下大雨,他也会去','即使下大雨,她也会去']},
+      {id_text:'Sekalipun sangat sulit, kita harus mencoba.', answers:['即使很难,我们也得试试']},
+      {id_text:'Sekalipun tidak ada orang yang percaya, aku tetap yakin.', answers:['即使没有人相信,我也坚信']},
+      {id_text:'Sekalipun gagal berkali-kali, dia tidak akan menyerah.', answers:['即使失败很多次,他也不会放弃','即使失败很多次,她也不会放弃']}
+    ]},
+    {title:'Latihan 4', note:'万一', items:[
+      {id_text:'Andaikan besok hujan, acara akan dibatalkan.', answers:['万一明天下雨,活动就会被取消','万一明天下雨,活动会被取消']},
+      {id_text:'Andaikan dia tidak datang, kita harus punya rencana lain.', answers:['万一他不来,我们得有别的计划','万一她不来,我们得有别的计划']},
+      {id_text:'Andaikan terjadi kecelakaan, segera hubungi aku.', answers:['万一发生事故,马上联系我']},
+      {id_text:'Andaikan kamu gagal, jangan menyerah.', answers:['万一你失败了,别放弃']},
+      {id_text:'Andaikan barang itu rusak, tolong beritahu aku.', answers:['万一那个东西坏了,请告诉我']}
+    ]},
+    {title:'Latihan 5', note:'除非...否则', items:[
+      {id_text:'Kecuali kamu meminta maaf, jika tidak dia tidak akan memaafkanmu.', answers:['除非你道歉,否则他不会原谅你','除非你道歉,否则她不会原谅你']},
+      {id_text:'Kecuali ada izin khusus, jika tidak kamu tidak boleh masuk.', answers:['除非有特别许可,否则你不能进去']},
+      {id_text:'Kecuali cuacanya membaik, jika tidak pertandingan akan ditunda.', answers:['除非天气变好,否则比赛会延期']},
+      {id_text:'Kecuali kamu berlatih lebih banyak, jika tidak kamu tidak akan lulus.', answers:['除非你多练习,否则你不会通过']},
+      {id_text:'Kecuali dia berubah pikiran, jika tidak rencana ini tidak akan berhasil.', answers:['除非他改变主意,否则这个计划不会成功','除非她改变主意,否则这个计划不会成功']}
+    ]},
+    {title:'Latihan 6', note:'甚至', items:[
+      {id_text:'Bahkan anak kecil pun mengerti kebenaran ini.', answers:['甚至小孩子都懂这个道理']},
+      {id_text:'Dia bahkan lupa nama sendiri.', answers:['他甚至忘了自己的名字','她甚至忘了自己的名字']},
+      {id_text:'Cuacanya bahkan lebih dingin dari musim dingin lalu.', answers:['天气甚至比去年冬天更冷']},
+      {id_text:'Dia bahkan tidak makan sepanjang hari.', answers:['他甚至一整天都没吃饭','她甚至一整天都没吃饭']},
+      {id_text:'Bahkan para ahli pun tidak bisa menjawab pertanyaan ini.', answers:['甚至专家都回答不了这个问题']}
+    ]},
+    {title:'Latihan 7', note:'何况', items:[
+      {id_text:'Orang dewasa saja tidak mengerti, apalagi anak-anak.', answers:['大人都不懂,何况孩子呢','大人都不懂,何况孩子']},
+      {id_text:'Aku saja tidak bisa melakukannya, apalagi dia.', answers:['我都做不到,何况他呢','我都做不到,何况她呢']},
+      {id_text:'Hari libur saja macet, apalagi hari kerja.', answers:['假期都堵车,何况平时呢']},
+      {id_text:'Yang mudah saja dia tidak bisa, apalagi yang sulit.', answers:['简单的他都不会,何况难的呢','简单的她都不会,何况难的呢']},
+      {id_text:'Waktu senggang saja tidak ada, apalagi waktu untuk berlibur.', answers:['空闲时间都没有,何况度假的时间呢']}
+    ]},
+    {title:'Latihan 8', note:'何必', items:[
+      {id_text:'Untuk apa kamu perlu khawatir tentang hal sekecil ini?', answers:['你何必为这么小的事担心呢','你何必为这么小的事情担心呢']},
+      {id_text:'Untuk apa harus marah kalau bisa dibicarakan baik-baik?', answers:['何必生气,好好说不行吗']},
+      {id_text:'Untuk apa kamu membeli barang mahal kalau yang murah juga cukup?', answers:['你何必买贵的,便宜的也够用']},
+      {id_text:'Untuk apa terburu-buru, waktu masih banyak.', answers:['你何必着急,时间还早呢']},
+      {id_text:'Untuk apa berbohong kalau kejujuran lebih baik?', answers:['何必撒谎,诚实不是更好吗']}
+    ]},
+    {title:'Latihan 9', note:'越...越', items:[
+      {id_text:'Semakin dia menjelaskan, semakin membuat orang bingung.', answers:['他越解释,越让人糊涂','她越解释,越让人糊涂']},
+      {id_text:'Semakin banyak berlatih, semakin mahir kamu.', answers:['你越练习,越熟练']},
+      {id_text:'Semakin dipikirkan, semakin terasa aneh.', answers:['越想越觉得奇怪']},
+      {id_text:'Semakin lama ditunggu, semakin tidak sabar.', answers:['越等越不耐烦']},
+      {id_text:'Semakin banyak dia bicara, semakin sedikit orang percaya.', answers:['他越说,越少人相信','她越说,越少人相信']}
+    ]},
+    {title:'Latihan 10', note:'要不是', items:[
+      {id_text:'Kalau bukan karena bantuanmu, aku pasti tidak akan berhasil.', answers:['要不是你的帮助,我肯定不会成功']},
+      {id_text:'Kalau bukan karena hujan, kami pasti sudah sampai.', answers:['要不是下雨,我们早就到了']},
+      {id_text:'Kalau bukan karena dia mengingatkan, aku pasti lupa.', answers:['要不是他提醒,我肯定忘了','要不是她提醒,我肯定忘了']},
+      {id_text:'Kalau bukan karena macet, dia tidak akan terlambat.', answers:['要不是堵车,他不会迟到','要不是堵车,她不会迟到']},
+      {id_text:'Kalau bukan karena kamu, masalah ini tidak akan selesai.', answers:['要不是你,这个问题不会解决']}
+    ]}
+  ]
+};
+
+const VOCAB = {
+  1:[['我','saya'],['你','kamu'],['他','dia (laki-laki)'],['她','dia (perempuan)'],['是','adalah'],['不','tidak'],
+     ['有','punya / ada'],['没有','tidak punya'],['一','satu'],['三','tiga'],['本','kt. bantu bilangan (buku)'],
+     ['这','ini'],['那','itu'],['谁','siapa'],['什么','apa'],['喜欢','suka'],['喝','minum'],['茶','teh'],
+     ['老师','guru'],['学校','sekolah'],['猫','kucing'],['桌子','meja'],['面条','mi'],['想','ingin'],
+     ['现在','sekarang'],['几','berapa (jumlah kecil)'],['书','buku'],['人','orang']],
+  2:[['了','partikel selesai/perubahan'],['已经','sudah'],['在','sedang / di'],['看','menonton / melihat'],
+     ['电视','televisi'],['会','bisa (kemampuan)'],['说','berbicara'],['汉语','bahasa Mandarin'],
+     ['比','dibanding'],['贵','mahal'],['因为','karena'],['所以','maka'],['下雨','hujan'],['觉得','merasa'],
+     ['很','sangat'],['聪明','pintar'],['别','jangan'],['抽烟','merokok'],['得','harus'],['早点儿','lebih awal'],
+     ['回家','pulang'],['先','dulu'],['再','lalu / kemudian'],['点','jam (waktu)'],['还','masih'],['起床','bangun tidur']],
+  3:[['把','kt. depan objek (把-sentence)'],['放','meletakkan'],['上','di atas'],['被','pasif (di-)'],
+     ['蛋糕','kue'],['虽然','walaupun'],['但是','tetapi'],['一边','sambil'],['吃饭','makan'],
+     ['越来越','semakin lama semakin'],['天气','cuaca'],['热','panas'],['除了','selain'],['以外','di luar itu'],
+     ['英语','bahasa Inggris'],['或者','atau'],['公共汽车','bis'],['走路','jalan kaki'],['好像','sepertinya'],
+     ['高兴','senang'],['商店','toko'],['顺便','sekalian'],['帮','membantu'],['买','membeli'],['面包','roti'],
+     ['听不懂','tidak paham (dengar)']],
+  4:[['尽管','meskipun'],['努力','berusaha keras / rajin'],['通过','lulus / melewati'],['考试','ujian'],
+     ['不但','tidak hanya'],['而且','tapi juga'],['只有','hanya dengan'],['才','baru (lalu)'],
+     ['每天','setiap hari'],['练习','berlatih'],['掌握','menguasai'],['无论','tidak peduli'],['难','sulit'],
+     ['一直','terus-menerus'],['微笑','tersenyum'],['一旦','begitu / sekali'],['开会','rapat'],
+     ['既然','karena sudah begitu'],['决定','memutuskan'],['阻止','menghalangi'],['由于','disebabkan oleh'],
+     ['堵车','macet'],['上班','pergi kerja'],['迟到','terlambat'],['与其','daripada'],['不如','lebih baik'],
+     ['办法','cara'],['宁可','lebih memilih'],['好吃','enak'],['之所以','alasan mengapa'],['路上','di jalan']],
+  5:[['不仅如此','bukan hanya itu'],['帮助','membantu'],['邻居','tetangga'],['与其说','daripada dikatakan'],
+     ['不如说','lebih tepat dikatakan'],['懒','malas'],['动力','semangat / motivasi'],['即使','sekalipun'],
+     ['同意','setuju'],['万一','andaikan / kalau-kalau'],['活动','acara'],['取消','dibatalkan'],
+     ['除非','kecuali'],['否则','jika tidak'],['道歉','minta maaf'],['原谅','memaafkan'],['甚至','bahkan'],
+     ['道理','kebenaran / prinsip'],['何况','apalagi'],['大人','orang dewasa'],['何必','untuk apa perlu'],
+     ['担心','khawatir'],['解释','menjelaskan'],['糊涂','bingung'],['要不是','kalau bukan karena'],['成功','berhasil']]
+};
+
+/* ============ STATE ============ */
+let state = {
+  view:'home',       // home | level | identity | practice | summary | vocab
+  level:null,
+  latihanIdx:null,   // index of chosen latihan within the level
+  pendingStart:null, // {level, latihanIdx} waiting for identity before practice starts
+  order:[],
+  idx:0,
+  score:0,
+  streak:0,
+  answered:false,
+  lastCorrect:false,
+  vocabLevel:1,
+  student:{nama:'', kelas:''}
+};
+
+try{
+  const savedName = localStorage.getItem('whyfy_student_nama');
+  const savedKelas = localStorage.getItem('whyfy_student_kelas');
+  if(savedName) state.student.nama = savedName;
+  if(savedKelas) state.student.kelas = savedKelas;
+}catch(e){}
+
+/* ============ HELPERS ============ */
+function normalize(s){
+  return (s||'').replace(/[\s,，。.、!！?？'"“”‘’;；:：]/g,'').trim();
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function bestKey(lvl, latihanIdx){return 'whyfy_best_l'+lvl+'_e'+latihanIdx;}
+function getBest(lvl, latihanIdx){return parseInt(localStorage.getItem(bestKey(lvl,latihanIdx))||'0',10);}
+function setBest(lvl, latihanIdx, score){
+  if(score> getBest(lvl,latihanIdx)) localStorage.setItem(bestKey(lvl,latihanIdx), String(score));
+}
+function hasIdentity(){
+  return state.student.nama.trim().length>0 && state.student.kelas.trim().length>0;
+}
+
+/* ============ NAV ============ */
+function goHome(){
+  state.view='home';
+  document.getElementById('navHome').classList.add('active');
+  document.getElementById('navVocab').classList.remove('active');
+  render();
+}
+function goVocab(){
+  state.view='vocab';
+  document.getElementById('navVocab').classList.add('active');
+  document.getElementById('navHome').classList.remove('active');
+  render();
+}
+function openLevel(lvl){
+  state.level=lvl;
+  state.view='level';
+  render();
+}
+function requestStart(lvl, latihanIdx){
+  if(hasIdentity()){
+    beginPractice(lvl, latihanIdx);
+  } else {
+    state.pendingStart={level:lvl, latihanIdx:latihanIdx};
+    state.view='identity';
+    render();
+  }
+}
+function submitIdentity(){
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const errEl = document.getElementById('identityError');
+  if(!nama || !kelas){
+    errEl.textContent = 'Nama dan asal kelas wajib diisi sebelum memulai latihan.';
+    return;
+  }
+  state.student.nama = nama;
+  state.student.kelas = kelas;
+  try{
+    localStorage.setItem('whyfy_student_nama', nama);
+    localStorage.setItem('whyfy_student_kelas', kelas);
+  }catch(e){}
+  if(state.pendingStart){
+    beginPractice(state.pendingStart.level, state.pendingStart.latihanIdx);
+    state.pendingStart=null;
+  } else {
+    goHome();
+  }
+}
+function changeIdentity(){
+  state.pendingStart=null;
+  state.view='identity';
+  render();
+}
+function beginPractice(lvl, latihanIdx){
+  state.view='practice';
+  state.level=lvl;
+  state.latihanIdx=latihanIdx;
+  const items = QUESTIONS[lvl][latihanIdx].items;
+  state.order=shuffle(items.map((_,i)=>i));
+  state.idx=0;
+  state.score=0;
+  state.streak=0;
+  state.answered=false;
+  render();
+}
+function pickVocabLevel(lvl){ state.vocabLevel=lvl; render(); }
+
+/* ============ ANSWER LOGIC ============ */
+function checkAnswer(){
+  const ta = document.getElementById('answerInput');
+  if(!ta) return;
+  const items = QUESTIONS[state.level][state.latihanIdx].items;
+  const q = items[state.order[state.idx]];
+  const userNorm = normalize(ta.value);
+  const isCorrect = q.answers.some(a=>normalize(a)===userNorm) && userNorm.length>0;
+  state.answered=true;
+  state.lastCorrect=isCorrect;
+  if(isCorrect){ state.score++; state.streak++; }
+  else{ state.streak=0; }
+  render();
+}
+function revealAnswer(){
+  state.answered=true;
+  state.lastCorrect=false;
+  state.streak=0;
+  render();
+}
+function nextQuestion(){
+  state.answered=false;
+  if(state.idx < state.order.length-1){
+    state.idx++;
+    render();
+  } else {
+    setBest(state.level, state.latihanIdx, state.score);
+    state.view='summary';
+    render();
+  }
+}
+function retryLatihan(){ beginPractice(state.level, state.latihanIdx); }
+
+/* ============ RENDER ============ */
+function render(){
+  const app = document.getElementById('app');
+  if(state.view==='home') app.innerHTML = renderHome();
+  else if(state.view==='level') app.innerHTML = renderLevel();
+  else if(state.view==='identity') app.innerHTML = renderIdentity();
+  else if(state.view==='practice') app.innerHTML = renderPractice();
+  else if(state.view==='summary') app.innerHTML = renderSummary();
+  else if(state.view==='vocab') app.innerHTML = renderVocab();
+
+  renderStudentPill();
+
+  if(state.view==='practice'){
+    const ta = document.getElementById('answerInput');
+    if(ta){
+      ta.focus();
+      ta.addEventListener('keydown', e=>{
+        if(e.key==='Enter' && !e.shiftKey){
+          e.preventDefault();
+          if(!state.answered) checkAnswer(); else nextQuestion();
+        }
+      });
+    }
+  }
+  if(state.view==='identity'){
+    const nm = document.getElementById('inputNama');
+    if(nm) nm.focus();
+  }
+}
+
+function renderStudentPill(){
+  const holder = document.getElementById('studentPillHolder');
+  if(!holder) return;
+  if(hasIdentity()){
+    holder.innerHTML = `<div class="student-pill">${state.student.nama} · ${state.student.kelas} <button onclick="changeIdentity()">ganti</button></div>`;
+  } else {
+    holder.innerHTML = '';
+  }
+}
+
+function renderHome(){
+  return `
+  <section class="hero">
+    <span class="eyebrow">latihan mengetik hanzi · HSK 1–5</span>
+    <h1>Ubah kalimat Indonesia jadi <span class="cn">汉字</span> yang tepat.</h1>
+    <p class="lede">Whyfy打字 memberimu kalimat berbahasa Indonesia sesuai tata bahasa tiap level HSK. Tugasmu: ketik jawabannya langsung dalam hanzi — bukan pinyin. Setiap level punya 10 variasi latihan dengan pola tata bahasa berbeda-beda.</p>
+    <div class="hero-panel">
+      <div class="grid-demo">
+        <div class="grid-box">我</div><div class="grid-box">是</div><div class="grid-box">老</div><div class="grid-box">师</div>
+      </div>
+      <div class="cap">Setiap jawaban benar akan “dicap” seperti kertas latihan menulis aksara — kotak 田字格 klasik.</div>
+    </div>
+  </section>
+
+  <h2 class="section-title"><small>Pilih level</small>Mulai berlatih</h2>
+  <div class="levels">
+    ${LEVELS.map(l=>{
+      return `<div class="lvl-card" onclick="openLevel(${l.id})">
+        <span class="num">${l.id}</span>
+        <h3>${l.label}</h3>
+        <span class="sub">${l.sub}</span>
+        <p>${l.desc}</p>
+        <div class="go"><span>10 latihan</span><span class="best">Buka level →</span></div>
+      </div>`;
+    }).join('')}
+  </div>
+
+  <p class="howto"><b>Cara main:</b> pilih level, lalu pilih salah satu dari 10 latihan yang tersedia. Sebelum mulai, isi nama dan asal kelasmu. Baca kalimat Indonesia, ketik jawaban hanzi di kotak input (pastikan keyboard/IME Mandarin aktif di perangkatmu), lalu tekan “Periksa Jawaban”.</p>
+  `;
+}
+
+function renderLevel(){
+  const lvl = LEVELS.find(l=>l.id===state.level);
+  const latihanList = QUESTIONS[state.level];
+  return `
+  <button class="backlink" onclick="goHome()">← Kembali ke daftar level</button>
+  <h2 class="section-title"><small>${lvl.sub}</small>${lvl.label} — pilih variasi latihan</h2>
+  <p class="howto">${lvl.desc}</p>
+  <div class="latihan-grid">
+    ${latihanList.map((lat,i)=>{
+      const best = getBest(state.level, i);
+      return `<div class="latihan-card" onclick="requestStart(${state.level}, ${i})">
+        <span class="lnum">${lat.title}</span>
+        <h4>${lat.note}</h4>
+        <div class="meta"><span>${lat.items.length} soal</span><span>${best?('Terbaik: '+best+'/'+lat.items.length):'Belum dicoba'}</span></div>
+      </div>`;
+    }).join('')}
+  </div>
+  `;
+}
+
+function renderIdentity(){
+  return `
+  <div class="identity-wrap">
+    <div class="identity-card">
+      <span class="eyebrow">sebelum mulai</span>
+      <h2>Isi data diri dulu, yuk</h2>
+      <p class="sub">Nama dan asal kelas ini akan tampil selama kamu berlatih dan di hasil akhir.</p>
+      <div class="field">
+        <label for="inputNama">Nama</label>
+        <input id="inputNama" type="text" placeholder="cth. Siti Rahma" value="${state.student.nama}">
+      </div>
+      <div class="field">
+        <label for="inputKelas">Asal Kelas</label>
+        <input id="inputKelas" type="text" placeholder="cth. X IPA 2" value="${state.student.kelas}">
+      </div>
+      <div class="form-error" id="identityError"></div>
+      <div class="actions">
+        <button class="btn" onclick="submitIdentity()">Mulai Latihan →</button>
+        <button class="btn ghost" onclick="goHome()">Batal</button>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+function renderPractice(){
+  const lvl = LEVELS.find(l=>l.id===state.level);
+  const lat = QUESTIONS[state.level][state.latihanIdx];
+  const q = lat.items[state.order[state.idx]];
+  const total = state.order.length;
+  const pct = Math.round((state.idx/total)*100);
+
+  let feedbackHtml = '';
+  if(state.answered){
+    const mainAnswer = q.answers[0];
+    const chars = mainAnswer.replace(/[,，]/g,'').split('');
+    const gridHtml = chars.map(c=>`<div class="grid-box small">${c}</div>`).join('');
+    const altHtml = q.answers.length>1 ? `<div class="answer-alt">Variasi lain yang juga diterima: ${q.answers.slice(1).map(a=>'<b>'+a+'</b>').join(', ')}</div>` : '';
+    feedbackHtml = `
+      <div class="feedback ${state.lastCorrect?'correct':'wrong'}">
+        <div class="verdict"><span class="stamp">${state.lastCorrect?'对':'X'}</span>${state.lastCorrect?'Benar!':'Belum tepat'}</div>
+        <div class="answer-grids">${gridHtml}</div>
+        ${altHtml}
+      </div>`;
+  }
+
+  return `
+  <div class="practice-head">
+    <div>
+      <span class="badge">${lvl.label} · ${lat.title}: ${lat.note}</span>
+    </div>
+    <div class="stat-row">
+      <span>Soal <b>${state.idx+1}/${total}</b></span>
+      <span>Skor <b>${state.score}</b></span>
+      <span>Beruntun <b>${state.streak}</b></span>
+    </div>
+  </div>
+  <div class="progress-bar"><div style="width:${pct}%"></div></div>
+
+  <div class="card">
+    <div class="qnote">${lat.note}</div>
+    <p class="qtext">&ldquo;${q.id_text}&rdquo;</p>
+    <div class="input-row">
+      <textarea id="answerInput" placeholder="输入汉字…" ${state.answered?'disabled':''}></textarea>
+    </div>
+    <div class="actions">
+      ${state.answered
+        ? `<button class="btn" onclick="nextQuestion()">${state.idx<total-1?'Soal Berikutnya →':'Lihat Hasil →'}</button>`
+        : `<button class="btn" onclick="checkAnswer()">Periksa Jawaban</button>
+           <button class="btn ghost" onclick="revealAnswer()">Lihat Kunci</button>`
+      }
+      <button class="btn ghost" onclick="openLevel(state.level)">Kembali ke Daftar Latihan</button>
+    </div>
+    ${feedbackHtml}
+  </div>
+  `;
+}
+
+function renderSummary(){
+  const lvl = LEVELS.find(l=>l.id===state.level);
+  const lat = QUESTIONS[state.level][state.latihanIdx];
+  const total = state.order.length;
+  const best = getBest(state.level, state.latihanIdx);
+  return `
+  <div style="margin-top:40px;">
+  <div class="summary-card">
+    <div class="lvl">${lvl.label} · ${lat.title}: ${lat.note}</div>
+    <p class="big">${state.score} / ${total}</p>
+    <p class="who">${state.student.nama} — ${state.student.kelas}</p>
+    <p>Skor terbaikmu untuk latihan ini: <b>${best}</b> / ${total}</p>
+    <div class="actions" style="justify-content:center;">
+      <button class="btn" onclick="retryLatihan()">Coba Lagi</button>
+      <button class="btn ghost" onclick="openLevel(state.level)">Latihan Lain di ${lvl.label}</button>
+      <button class="btn ghost" onclick="goHome()">Pilih Level Lain</button>
+    </div>
+  </div>
+  </div>
+  `;
+}
+
+function renderVocab(){
+  const words = VOCAB[state.vocabLevel];
+  return `
+  <h2 class="section-title"><small>Referensi</small>Kosakata per level HSK</h2>
+  <div class="vocab-toolbar">
+    ${LEVELS.map(l=>`<button class="chip ${state.vocabLevel===l.id?'active':''}" onclick="pickVocabLevel(${l.id})">${l.label}</button>`).join('')}
+  </div>
+  <table class="vocab">
+    <thead><tr><th>Hanzi</th><th>Arti (Indonesia)</th></tr></thead>
+    <tbody>
+      ${words.map(w=>`<tr><td class="hz">${w[0]}</td><td>${w[1]}</td></tr>`).join('')}
+    </tbody>
+  </table>
+  `;
+}
+
+render();
+</script>
+
+<div class="wrap">
+<footer class="site">
+  <span>Whyfy打字 — latihan mengetik hanzi untuk pelajar HSK 1–5</span>
+  <span>Dibuat untuk berlatih menulis aksara, bukan pinyin.</span>
+</footer>
+</div>
+</body>
+</html>
