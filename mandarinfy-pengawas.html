@@ -59,7 +59,7 @@
 
   /* ---------- dashboard ---------- */
   .wrap{ max-width:1200px; margin:0 auto; padding:30px 20px 80px; }
-  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:26px; }
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:26px; }
   @media (max-width:800px){ .stats{ grid-template-columns:1fr 1fr; } }
   .stat-card{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
   .stat-card .num{ font-family:'Noto Serif SC'; font-weight:900; font-size:28px; color:var(--red); }
@@ -132,8 +132,10 @@
     <div class="stats">
       <div class="stat-card"><div class="num" id="st-total">0</div><div class="label">Peserta mengumpulkan</div></div>
       <div class="stat-card"><div class="num" id="st-avg">0</div><div class="label">Rata-rata skor reading (dari 50)</div></div>
-      <div class="stat-card"><div class="num" id="st-max">0</div><div class="label">Skor tertinggi</div></div>
-      <div class="stat-card"><div class="num" id="st-min">0</div><div class="label">Skor terendah</div></div>
+      <div class="stat-card"><div class="num" id="st-max">0</div><div class="label">Skor tertinggi (reading)</div></div>
+      <div class="stat-card"><div class="num" id="st-min">0</div><div class="label">Skor terendah (reading)</div></div>
+      <div class="stat-card"><div class="num" id="st-avg-listening">0</div><div class="label">Rata-rata skor listening (dari 35)</div></div>
+      <div class="stat-card"><div class="num" id="st-avg-writing">0</div><div class="label">Rata-rata skor susun hanzi (dari 10)</div></div>
     </div>
 
     <div class="top-actions">
@@ -223,6 +225,10 @@ async function loadData(){
         kelas: r.Kelas,
         skorReading: Number(r.SkorBenar),
         totalReading: Number(r.TotalSoal),
+        skorListening: r.SkorListening !== undefined && r.SkorListening !== "" ? Number(r.SkorListening) : null,
+        totalListening: r.TotalListening !== undefined && r.TotalListening !== "" ? Number(r.TotalListening) : null,
+        skorWriting: r.SkorWriting !== undefined && r.SkorWriting !== "" ? Number(r.SkorWriting) : null,
+        totalWriting: r.TotalWriting !== undefined && r.TotalWriting !== "" ? Number(r.TotalWriting) : null,
         writing
       };
     });
@@ -241,6 +247,8 @@ function renderStats(rows){
     document.getElementById("st-avg").textContent = "0";
     document.getElementById("st-max").textContent = "0";
     document.getElementById("st-min").textContent = "0";
+    document.getElementById("st-avg-listening").textContent = "0";
+    document.getElementById("st-avg-writing").textContent = "0";
     return;
   }
   const scores = rows.map(r => r.skorReading);
@@ -248,6 +256,13 @@ function renderStats(rows){
   document.getElementById("st-avg").textContent = avg;
   document.getElementById("st-max").textContent = Math.max(...scores);
   document.getElementById("st-min").textContent = Math.min(...scores);
+
+  const listeningScores = rows.map(r => r.skorListening).filter(v => v !== null && !isNaN(v));
+  const writingScores = rows.map(r => r.skorWriting).filter(v => v !== null && !isNaN(v));
+  document.getElementById("st-avg-listening").textContent = listeningScores.length
+    ? (listeningScores.reduce((a,b)=>a+b,0) / listeningScores.length).toFixed(1) : "-";
+  document.getElementById("st-avg-writing").textContent = writingScores.length
+    ? (writingScores.reduce((a,b)=>a+b,0) / writingScores.length).toFixed(1) : "-";
 }
 
 function sortRows(rows){
@@ -277,6 +292,8 @@ function renderTable(rows){
     <th class="sortable" data-key="nama">Nama ⇅</th>
     <th class="sortable" data-key="kelas">Kelas ⇅</th>
     <th class="sortable" data-key="skorReading">Skor Benar ⇅</th>
+    <th>Listening</th>
+    <th>Susun Hanzi</th>
     ${writingCols.map(c=>`<th>${c}</th>`).join("")}
     </tr></thead><tbody>`;
   rows.forEach(r => {
@@ -285,6 +302,8 @@ function renderTable(rows){
       <td>${escapeHtml(r.nama||"")}</td>
       <td>${escapeHtml(r.kelas||"")}</td>
       <td class="score-cell">${r.skorReading} / ${r.totalReading}</td>
+      <td class="score-cell">${r.skorListening !== null ? r.skorListening + " / " + r.totalListening : "—"}</td>
+      <td class="score-cell">${r.skorWriting !== null ? r.skorWriting + " / " + r.totalWriting : "—"}</td>
       ${(r.writing||[]).map(w => `<td class="writing-cell">${escapeHtml(w.jawaban||"—")}</td>`).join("")}
     </tr>`;
   });
@@ -318,12 +337,14 @@ document.getElementById("btn-export-csv").addEventListener("click", () => {
   if(rows.length === 0){ toast("Belum ada data untuk diekspor."); return; }
   const writingCount = (rows[0].writing || []).length;
   const writingCols = Array.from({length: writingCount}, (_,i)=>`W${i+1}`);
-  const header = ["Waktu","Nama","Kelas","Skor Benar","Total Soal", ...writingCols];
+  const header = ["Waktu","Nama","Kelas","Skor Benar","Total Soal","Listening","Susun Hanzi", ...writingCols];
   const csvRows = [header.join(",")];
   rows.forEach(r => {
     const line = [
       new Date(r.waktu).toLocaleString("id-ID"),
       r.nama, r.kelas, r.skorReading, r.totalReading,
+      r.skorListening !== null ? `${r.skorListening}/${r.totalListening}` : "",
+      r.skorWriting !== null ? `${r.skorWriting}/${r.totalWriting}` : "",
       ...(r.writing||[]).map(w => (w.jawaban||"").replace(/\n/g," "))
     ].map(v => `"${String(v).replace(/"/g,'""')}"`);
     csvRows.push(line.join(","));
