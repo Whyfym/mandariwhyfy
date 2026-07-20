@@ -114,7 +114,6 @@
   .exam-head .meta{ font-size:13px; color:#7a6a58; margin-top:6px; }
   .progressbar{ height:8px; background:var(--blush); border-radius:99px; margin-top:16px; overflow:hidden; }
   .progressbar > div{ height:100%; background:var(--red); width:0%; transition:width .2s; }
-<body class="notranslate">
   .bab-tab{
     display:flex; align-items:center; gap:12px; margin:36px 0 14px;
   }
@@ -186,7 +185,19 @@
 
   .hidden{ display:none !important; }
   .footer-note{ text-align:center; font-size:11.5px; color:#a99a89; margin-top:40px; }
+  /* Cegah seleksi teks di area ujian */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+  .no-select textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
 </style>
+  <body class="notranslate">
 </head>
 <body>
 
@@ -238,13 +249,13 @@
       <div class="progressbar"><div id="progress-fill"></div></div>
     </div>
 
-    <div id="quiz-mount"></div>
+    <div id="quiz-mount" class="no-select"></div>
 
     <div class="bab-tab">
       <div class="num" style="background:#B3272D;">✍</div>
       <div class="title">Bagian Writing<span>Buat kalimat sesuai pola tata bahasa yang diminta. Tidak akan dikoreksi otomatis.</span></div>
     </div>
-    <div id="writing-mount"></div>
+    <div id="writing-mount" class="no-select"></div>
 
     <div class="submit-zone">
       <h3>Sudah yakin dengan semua jawaban?</h3>
