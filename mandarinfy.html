@@ -134,7 +134,9 @@
   .qcard .qtext{ font-size:16.5px; font-weight:500; line-height:1.5; }
   .qcard .qtext .hint{ display:block; font-size:12.5px; color:#8a7b6a; font-weight:400; margin-top:3px; }
   .opts{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }
-  @media (max-width:600px){ .opts{ grid-template-columns:1fr; } }
+  .opts.opts-narrow{ grid-template-columns:repeat(3,1fr); }
+  .opts.opts-6{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:600px){ .opts{ grid-template-columns:1fr 1fr; } }
   .opt{
     display:flex; align-items:center; gap:9px; border:1.5px solid var(--line); border-radius:11px;
     padding:11px 13px; cursor:pointer; font-size:15px; background:#fffefb; transition:.12s;
@@ -142,6 +144,31 @@
   .opt:hover{ border-color:#e3b9ba; }
   .opt input{ accent-color:var(--red); width:16px; height:16px; flex:none; }
   .opt.selected{ border-color:var(--red); background:var(--blush); font-weight:600; }
+
+  .section-intro{
+    background:var(--paper); border:1px dashed var(--line); border-radius:14px;
+    padding:16px 20px; margin:14px 0 18px; font-size:13px; color:#7a6a58; line-height:1.6;
+  }
+
+  /* ---------- susun hanzi tiles ---------- */
+  .assembled-row{
+    display:flex; flex-wrap:wrap; gap:8px; min-height:52px; padding:10px;
+    background:#fbf6ec; border:1.5px dashed var(--line); border-radius:12px; margin-top:12px;
+  }
+  .assembled-row .placeholder{ font-size:13px; color:#b0a08e; align-self:center; }
+  .pool-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .tile{
+    font-family:'Noto Serif SC'; font-weight:700; font-size:16px;
+    padding:9px 14px; border-radius:10px; border:1.5px solid var(--line);
+    background:#fff; cursor:pointer; transition:.12s; user-select:none;
+  }
+  .tile:hover{ border-color:var(--red); }
+  .tile.in-answer{ background:var(--red); color:#fff; border-color:var(--red-dark); }
+  .hanzi-tools{ display:flex; justify-content:flex-end; margin-top:8px; }
+  .hanzi-tools button{
+    font-size:12px; background:none; border:none; color:var(--red-dark); font-weight:600;
+    cursor:pointer; text-decoration:underline; font-family:'Poppins';
+  }
 
   .writing-card textarea{
     width:100%; margin-top:12px; border:1.5px solid var(--line); border-radius:12px;
@@ -157,15 +184,15 @@
   .submit-zone .btn-primary{ width:auto; padding:14px 40px; }
 
   /* ---------- result screen ---------- */
-  .result-wrap{ max-width:560px; margin:60px auto; text-align:center; }
+  .result-wrap{ max-width:640px; margin:60px auto 100px; text-align:center; }
   .seal-big{
     width:150px; height:150px; margin:0 auto 22px; border-radius:50%;
     border:4px solid var(--red); display:flex; flex-direction:column; align-items:center; justify-content:center;
     color:var(--red); transform:rotate(-6deg); font-family:'Noto Serif SC';
     box-shadow:0 0 0 6px rgba(179,39,45,0.08);
   }
-  .seal-big .score{ font-size:40px; font-weight:900; line-height:1; }
-  .seal-big .of{ font-size:12px; font-weight:600; margin-top:2px; }
+  .seal-big .score{ font-size:36px; font-weight:900; line-height:1; }
+  .seal-big .of{ font-size:11px; font-weight:600; margin-top:2px; }
   .result-wrap h2{ font-size:26px; margin-bottom:8px; }
   .result-wrap p{ color:#7a6a58; font-size:14px; line-height:1.6; }
   .result-card{
@@ -176,6 +203,27 @@
   .result-card .row:last-child{ border-bottom:none; }
   .result-card .row b{ color:var(--red-dark); }
 
+  .wrong-wrap{ text-align:left; margin-top:28px; }
+  .wrong-wrap h3{ font-size:16px; margin-bottom:10px; }
+  .wrong-group{ margin-bottom:18px; }
+  .wrong-group .gtitle{
+    font-size:13px; font-weight:700; color:var(--red-dark); margin-bottom:8px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .wrong-item{
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:12px 14px; margin-bottom:8px; font-size:13px;
+  }
+  .wrong-item .no{ color:var(--red); font-weight:700; margin-right:6px; }
+  .wrong-item .q{ font-weight:500; }
+  .wrong-item .compare{ margin-top:6px; font-size:12.5px; color:#7a6a58; }
+  .wrong-item .compare b{ color:var(--bad); }
+  .wrong-item .compare .ok{ color:var(--ok); font-weight:700; }
+  .all-correct-note{
+    text-align:center; background:var(--paper); border:1px dashed var(--line); border-radius:14px;
+    padding:20px; color:var(--ok); font-weight:600; margin-top:20px;
+  }
+
   .toast{
     position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
     background:var(--ink); color:#fff; padding:12px 20px; border-radius:12px; font-size:13px;
@@ -185,21 +233,21 @@
 
   .hidden{ display:none !important; }
   .footer-note{ text-align:center; font-size:11.5px; color:#a99a89; margin-top:40px; }
+
   /* Cegah seleksi teks di area ujian */
-.no-select {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
   .no-select textarea {
-  user-select: text;
-  -webkit-user-select: text;
-}
+    user-select: text;
+    -webkit-user-select: text;
+  }
 </style>
-  <body class="notranslate">
 </head>
-<body>
+<body class="notranslate">
 
 <!-- ============ TOAST ============ -->
 <div class="toast" id="toast"></div>
@@ -211,7 +259,7 @@
       <div>
         <span class="cn-big">学中文</span>
         <h1>Mandarinfy</h1>
-        <p>Ujian tata bahasa HSK 2 · Bab 1 sampai Bab 8. Uji pemahamanmu tentang 给/送/发/寄, 才, 得/地/的, 把, 的, dan pola-pola lain lewat 50 soal reading dan 10 soal writing.</p>
+        <p>Ujian HSK 2 · Bab 1 sampai Bab 8. 35 soal listening, 50 soal reading, dan 10 soal susun hanzi. Nomor soal 1–35 listening, 36–85 reading, 86–95 susun hanzi.</p>
       </div>
       <div class="stamp-ring">MANDARINFY<br>HSK · 2</div>
     </div>
@@ -228,7 +276,7 @@
       </div>
       <div class="err" id="login-err">Nama dan kelas wajib diisi ya.</div>
       <button class="btn btn-primary" id="btn-start">Mulai Ujian →</button>
-      <div class="login-foot">50 soal reading · 10 soal writing</div>
+      <div class="login-foot">35 listening · 50 reading · 10 susun hanzi</div>
     </div>
   </div>
 </div>
@@ -244,16 +292,22 @@
   </div>
   <div class="wrap">
     <div class="exam-head">
-      <h1>Ujian Tata Bahasa HSK 2 <span style="color:var(--red)">· Bab 1–8</span></h1>
-      <div class="meta" id="progress-text">0 dari 60 soal terjawab</div>
+      <h1>Ujian HSK 2 <span style="color:var(--red)">· Bab 1–8</span></h1>
+      <div class="meta" id="progress-text">0 dari 95 soal terjawab</div>
       <div class="progressbar"><div id="progress-fill"></div></div>
     </div>
+
+    <div class="bab-tab">
+      <div class="num" style="background:#8C1F24;">听</div>
+      <div class="title">Bagian Listening (No. 1–35)<span>Dengarkan audio yang diputar pengawas, lalu pilih jawabanmu di sini.</span></div>
+    </div>
+    <div id="listening-mount" class="no-select"></div>
 
     <div id="quiz-mount" class="no-select"></div>
 
     <div class="bab-tab">
       <div class="num" style="background:#B3272D;">✍</div>
-      <div class="title">Bagian Writing<span>Buat kalimat sesuai pola tata bahasa yang diminta. Tidak akan dikoreksi otomatis.</span></div>
+      <div class="title">Bagian Susun Hanzi (No. 86–95)<span>Susun kata/frasa yang tersedia menjadi kalimat yang benar sesuai pola tata bahasa Bab 1–8.</span></div>
     </div>
     <div id="writing-mount" class="no-select"></div>
 
@@ -277,35 +331,62 @@
   <div class="result-wrap">
     <div class="seal-big">
       <div class="score" id="res-score">0</div>
-      <div class="of">/ 50 BENAR</div>
+      <div class="of">/ 95 BENAR</div>
     </div>
     <h2>Ujian selesai, <span id="res-name">-</span>!</h2>
-    <p>Hasil reading dan jawaban writing kamu sudah tercatat di rekap nilai Mandarinfy.</p>
+    <p>Berikut rincian hasil ujianmu. Bagian yang salah ditampilkan di bawah supaya kamu bisa belajar lagi.</p>
     <div class="result-card">
       <div class="row"><span>Nama</span><b id="rc-name">-</b></div>
       <div class="row"><span>Kelas</span><b id="rc-kelas">-</b></div>
+      <div class="row"><span>Skor Listening</span><b id="rc-listening">-</b></div>
       <div class="row"><span>Skor Reading</span><b id="rc-score">-</b></div>
-      <div class="row"><span>Soal Writing terjawab</span><b id="rc-writing">-</b></div>
+      <div class="row"><span>Skor Susun Hanzi</span><b id="rc-writing">-</b></div>
       <div class="row"><span>Waktu Submit</span><b id="rc-time">-</b></div>
     </div>
+
+    <div class="wrong-wrap" id="wrong-wrap"></div>
+
     <button class="btn btn-ghost" id="btn-back-login" style="margin-top:24px;">Kembali ke Halaman Login</button>
   </div>
 </div>
 
 <script>
 /* ======================================================================
-   DATA: 50 soal reading (pilihan ganda) — Bab 1-8
+   DATA: 35 soal listening — kunci jawaban sudah ditentukan
+   Bagian 1 (1-10): benar/salah   Bagian 2 (11-20): huruf A-F
+   Bagian 3 (21-30): pilihan A-C  Bagian 4 (31-35): pilihan A-C
+   ====================================================================== */
+const LISTENING = [
+  {type:"tf", answer:"√"}, {type:"tf", answer:"×"}, {type:"tf", answer:"×"}, {type:"tf", answer:"√"}, {type:"tf", answer:"×"},
+  {type:"tf", answer:"×"}, {type:"tf", answer:"√"}, {type:"tf", answer:"√"}, {type:"tf", answer:"×"}, {type:"tf", answer:"√"},
+  {type:"letter", answer:"F"}, {type:"letter", answer:"E"}, {type:"letter", answer:"B"}, {type:"letter", answer:"C"}, {type:"letter", answer:"A"},
+  {type:"letter", answer:"B"}, {type:"letter", answer:"E"}, {type:"letter", answer:"C"}, {type:"letter", answer:"D"}, {type:"letter", answer:"A"},
+  {type:"abc", answer:"A"}, {type:"abc", answer:"C"}, {type:"abc", answer:"A"}, {type:"abc", answer:"A"}, {type:"abc", answer:"B"},
+  {type:"abc", answer:"A"}, {type:"abc", answer:"B"}, {type:"abc", answer:"B"}, {type:"abc", answer:"B"}, {type:"abc", answer:"C"},
+  {type:"abc", answer:"C"}, {type:"abc", answer:"C"}, {type:"abc", answer:"B"}, {type:"abc", answer:"A"}, {type:"abc", answer:"C"}
+];
+const LISTENING_OPTS = {
+  tf: ["√","×"],
+  letter: ["A","B","C","D","E","F"],
+  abc: ["A","B","C"]
+};
+const LISTENING_SECTION_INTRO = [
+  {from:0, to:10, text:"Bagian 1 (No. 1–10): dengarkan pernyataan, tentukan Benar (√) atau Salah (×)."},
+  {from:10, to:20, text:"Bagian 2 (No. 11–20): cocokkan setiap pernyataan dengan gambar berhuruf A–F yang ditunjukkan pengawas."},
+  {from:20, to:30, text:"Bagian 3 (No. 21–30): dengarkan percakapan singkat, lalu pilih jawaban A/B/C yang paling tepat."},
+  {from:30, to:35, text:"Bagian 4 (No. 31–35): dengarkan percakapan lebih panjang, lalu pilih jawaban A/B/C yang paling tepat."}
+];
+
+/* ======================================================================
+   DATA: 50 soal reading (pilihan ganda) — Bab 1-8 — nomor global 36-85
    ====================================================================== */
 const READING = [
-// ---- BAB 1: 给/送/发/寄, 要, 还是 ----
 {bab:1, q:"老师 ___ 我们作业。", hint:"Guru memberi kita PR.", options:["给","送","发","寄"], answer:"给"},
 {bab:1, q:"我 ___ 你消息，你看一下。", hint:"Aku kirim pesan ke kamu.", options:["寄","给","发","送"], answer:"发"},
 {bab:1, q:"我 ___ 给你一个包裹。", hint:"Aku kirim paket lewat pos ke kamu.", options:["送","发","寄","给"], answer:"寄"},
 {bab:1, q:"他 ___ 给我一本书，作为生日礼物。", hint:"Dia mengantar/memberi hadiah buku ulang tahun.", options:["发","寄","给","送"], answer:"送"},
 {bab:1, q:"你 ___ 多喝水，对身体好。", hint:"Kamu harus minum lebih banyak air.", options:["还是","送","要","寄"], answer:"要"},
 {bab:1, q:"天气不好，我们 ___ 明天再去吧。", hint:"Kita sebaiknya besok saja pergi.", options:["才","要","还是","送"], answer:"还是"},
-
-// ---- BAB 2: 才, S+P jadi predikat, 地 ----
 {bab:2, q:"他十二点 ___ 睡觉。", hint:"Dia baru tidur jam 12 malam — ada rasa telat.", options:["就","才","还","地"], answer:"才"},
 {bab:2, q:"我等了一个小时，他 ___ 来。", hint:"Aku menunggu 1 jam, dia baru datang.", options:["就","才","还","了"], answer:"才"},
 {bab:2, q:"我 ___ 他很聪明。", hint:"Aku pikir dia pintar (opini ringan, santai).", options:["希望","觉得","知道","听说"], answer:"觉得"},
@@ -313,8 +394,6 @@ const READING = [
 {bab:2, q:"老师 ___ 今天没有作业。", hint:"Guru bilang hari ini tidak ada PR.", options:["觉得","希望","说","认为"], answer:"说"},
 {bab:2, q:"他认真 ___ 学习。", hint:"Dia belajar dengan serius — menjelaskan cara.", options:["得","的","地","了"], answer:"地"},
 {bab:2, q:"我 ___ 他不会来了。", hint:"Aku pikir dia tidak akan datang.", options:["说","知道","希望","想"], answer:"想"},
-
-// ---- BAB 3: durasi, reduplikasi verb, 是不是, reduplikasi adjective ----
 {bab:3, q:"我们聊 ___ 三十分钟。", hint:"Kita ngobrol selama 30 menit.", options:["过","了","着","的"], answer:"了"},
 {bab:3, q:"你 ___ 这本书吗？", hint:"Coba lihat dulu buku ini yuk (santai, sebentar).", options:["看了","看看","在看","看着"], answer:"看看"},
 {bab:3, q:"我们 ___ 吧，我有一个好主意。", hint:"Ayo kita diskusi sebentar.", options:["讨论了","在讨论","讨论讨论","讨论着"], answer:"讨论讨论"},
@@ -322,62 +401,53 @@ const READING = [
 {bab:3, q:"他 ___ 地回家了。", hint:"Dia pulang dengan sangat gembira (reduplikasi kata sifat AABB).", options:["很高兴","高兴","高高兴兴","高兴的"], answer:"高高兴兴"},
 {bab:3, q:"你学汉语学 ___ 多长时间了？", hint:"Sudah berapa lama kamu belajar bahasa Mandarin?", options:["过","了","着","的"], answer:"了"},
 {bab:3, q:"他工作 ___ 十个小时。", hint:"Dia sudah bekerja selama 10 jam (tanpa objek).", options:["过","了","在","着"], answer:"了"},
-
-// ---- BAB 4: 只好, 给(preposisi), pelengkap hasil ----
 {bab:4, q:"没钱了，我 ___ 回家。", hint:"Tidak ada uang, aku terpaksa pulang (tidak ada pilihan lain).", options:["要","应该","只好","得"], answer:"只好"},
 {bab:4, q:"妈妈 ___ 我买了一件衣服。", hint:"Mama membelikan aku baju (preposisi: untuk/kepada).", options:["把","为了","给","送"], answer:"给"},
 {bab:4, q:"我准备 ___ 了，可以走了。", hint:"Aku sudah siap dengan baik, bisa berangkat.", options:["完","上","好","懂"], answer:"好"},
 {bab:4, q:"我写 ___ 作业了，很累。", hint:"Aku sudah selesai total menulis PR.", options:["好","完","上","见"], answer:"完"},
 {bab:4, q:"请把门关 ___。", hint:"Tolong tutup pintu sampai benar-benar tertutup.", options:["下","好","完","上"], answer:"上"},
 {bab:4, q:"老师说的话，我听 ___ 了。", hint:"Aku mengerti apa yang guru katakan.", options:["见","到","完","懂"], answer:"懂"},
-
-// ---- BAB 5: pelengkap hasil lanjutan, 又...又, 多/几 ----
 {bab:5, q:"我找 ___ 工作了！", hint:"Aku berhasil mendapatkan pekerjaan!", options:["在","走","到","满"], answer:"到"},
 {bab:5, q:"书放 ___ 桌子上。", hint:"Buku diletakkan di atas meja (posisi setelah tindakan).", options:["到","走","满","在"], answer:"在"},
 {bab:5, q:"时间 ___ 得很快。", hint:"Waktu berlalu dengan cepat.", options:["在","满","到","走"], answer:"走"},
 {bab:5, q:"杯子装 ___ 了水。", hint:"Gelas terisi penuh air.", options:["在","走","到","满"], answer:"满"},
 {bab:5, q:"这个地方 ___ 大 ___ 漂亮。", hint:"Tempat ini besar dan cantik sekaligus.", options:["也...也","又...又","不...也不","还...还"], answer:"又...又"},
 {bab:5, q:"我们等了 ___ 两个小时。", hint:"Kita menunggu sekitar 1-2 jam (perkiraan angka kecil).", options:["两","几","一","多"], answer:"一"},
-
-// ---- BAB 6: perbandingan, 好吗, 把 ----
 {bab:6, q:"我 ___ 他不一样。", hint:"Aku berbeda dengan dia.", options:["在","给","跟","被"], answer:"跟"},
 {bab:6, q:"他的衣服 ___ 我的一样。", hint:"Bajunya sama dengan bajuku.", options:["给","和","被","在"], answer:"和"},
 {bab:6, q:"我们一起去吃饭，___？", hint:"Kita pergi makan bareng ya, boleh? (minta persetujuan)", options:["是不是","吧","对了","好吗"], answer:"好吗"},
 {bab:6, q:"我 ___ 手机放在床上。", hint:"Aku meletakkan hp di atas kasur.", options:["被","在","给","把"], answer:"把"},
 {bab:6, q:"请 ___ 椅子放在门旁边。", hint:"Tolong letakkan kursi di sebelah pintu.", options:["在","把","给","被"], answer:"把"},
 {bab:6, q:"他 ___ 把作业写完。", hint:"Dia belum menyelesaikan PR (bentuk negatif dengan 把).", options:["不","别","没","都"], answer:"没"},
-
-// ---- BAB 7: 的, 有点儿, 一点儿 ----
 {bab:7, q:"这是我 ___ 书。", hint:"Ini bukuku (kepunyaan).", options:["地","得","的","了"], answer:"的"},
 {bab:7, q:"这个包是我 ___。", hint:"Ini tasku, milikku (的 sebagai pengganti kata benda).", options:["地","得","了","的"], answer:"的"},
 {bab:7, q:"我喜欢你 ___ 的。", hint:"Aku suka yang kamu beli (kata kerja + 的 jadi frasa benda).", options:["买了","在买","买","买着"], answer:"买"},
 {bab:7, q:"我喜欢 ___ 的，不喜欢小的。", hint:"Aku suka yang besar (kata sifat + 的).", options:["很大","大了","大","大的的"], answer:"大"},
 {bab:7, q:"今天有点儿 ___。", hint:"Hari ini agak dingin (keluhan ringan).", options:["很冷","冷了","冷","太冷"], answer:"冷"},
 {bab:7, q:"便宜 ___，可以吗？", hint:"Lebih murah sedikit ya, boleh? (permintaan sopan)", options:["有点儿","一下","一点儿","一遍"], answer:"一点儿"},
-
-// ---- BAB 8: 左右, 才(penekanan), 差不多, 还可以, 了 ----
 {bab:8, q:"我们班有十个人 ___。", hint:"Kelas kami ada sekitar 10 orang (perkiraan netral).", options:["多","几","左右","差不多"], answer:"左右"},
 {bab:8, q:"这个地方 ___ 漂亮！", hint:"Tempat ini benar-benar cantik! (penekanan)", options:["左右","还","差不多","才"], answer:"才"},
 {bab:8, q:"我 ___ 好了，还没吃饭。", hint:"Aku hampir selesai (masih sedikit lagi).", options:["左右","才","还","差不多"], answer:"差不多"},
 {bab:8, q:"这个菜 ___，不是很好吃。", hint:"Makanan ini lumayan, bukan sangat enak.", options:["不错","一般","还可以","差不多"], answer:"还可以"},
 {bab:8, q:"天冷 ___，我们快点走吧。", hint:"Cuacanya sudah jadi dingin, ayo cepat jalan (perubahan keadaan).", options:["过","着","了","的"], answer:"了"},
-{bab:8, q:"这个不好，那个 ___ 好。", hint:"Ini tidak bagus, yang itu justru bagus (penegasan perbandingan).", options:["左右","还","差不多","才"], answer:"才"},
+{bab:8, q:"这个不好，那个 ___ 好。", hint:"Ini tidak bagus, yang itu justru bagus (penegasan perbandingan).", options:["左右","还","差不多","才"], answer:"才"}
 ];
 
 /* ======================================================================
-   DATA: 10 soal writing — Bab 1-8
+   DATA: 10 soal susun hanzi — Bab 1-8 — nomor global 86-95
+   tiles diacak saat render, correctOrder = urutan tile yang benar
    ====================================================================== */
-const WRITING = [
-  {bab:1, prompt:"Gunakan pola \"S + 给 + orang + V + benda\" untuk menulis: \"Aku memberi kamu kopi.\""},
-  {bab:2, prompt:"Gunakan kata \"才\" untuk menulis: \"Dia baru tidur jam 12 malam.\""},
-  {bab:3, prompt:"Gunakan pola durasi \"S + V + 了 + durasi\" untuk menulis: \"Aku menunggu kamu setengah jam.\""},
-  {bab:3, prompt:"Gunakan reduplikasi kata kerja (pola AA) untuk menulis: \"Aku mau coba lihat baju ini dulu.\""},
-  {bab:4, prompt:"Gunakan kata \"只好\" untuk menulis: \"Karena hujan, aku terpaksa naik taksi.\""},
-  {bab:4, prompt:"Gunakan pelengkap hasil \"完\" untuk menulis: \"Aku sudah selesai menulis PR.\""},
-  {bab:5, prompt:"Gunakan pola \"又...又...\" untuk menulis: \"Cuaca ini panas dan lembab.\""},
-  {bab:6, prompt:"Gunakan pola \"跟...一样\" untuk menulis: \"Bajunya sama dengan bajuku.\""},
-  {bab:6, prompt:"Gunakan kata \"把\" untuk menulis: \"Tolong letakkan kunci di atas meja.\""},
-  {bab:7, prompt:"Gunakan kata \"有点儿\" untuk menulis: \"Aku agak lapar.\""},
+const SUSUN_HANZI = [
+  {bab:1, meaning:"Guru memberi kita PR.", tiles:["老师","给","我们","作业"], correctOrder:["老师","给","我们","作业"]},
+  {bab:1, meaning:"Kamu harus banyak minum air.", tiles:["你","要","多","喝水"], correctOrder:["你","要","多","喝水"]},
+  {bab:2, meaning:"Dia baru tidur jam 12 malam.", tiles:["他","十二点","才","睡觉"], correctOrder:["他","十二点","才","睡觉"]},
+  {bab:3, meaning:"Kita mengobrol selama 30 menit.", tiles:["我们","聊了","三十分钟"], correctOrder:["我们","聊了","三十分钟"]},
+  {bab:4, meaning:"Aku terpaksa pulang.", tiles:["我","只好","回家"], correctOrder:["我","只好","回家"]},
+  {bab:4, meaning:"Aku sudah selesai menulis PR.", tiles:["我","写完","作业","了"], correctOrder:["我","写完","作业","了"]},
+  {bab:5, meaning:"Tempat ini besar dan cantik.", tiles:["这个地方","又大","又漂亮"], correctOrder:["这个地方","又大","又漂亮"]},
+  {bab:6, meaning:"Bajunya sama dengan bajuku.", tiles:["他的衣服","跟","我的","一样"], correctOrder:["他的衣服","跟","我的","一样"]},
+  {bab:7, meaning:"Aku agak lapar.", tiles:["我","有点儿","饿"], correctOrder:["我","有点儿","饿"]},
+  {bab:8, meaning:"Aku hampir selesai.", tiles:["我","差不多","好了"], correctOrder:["我","差不多","好了"]}
 ];
 
 const BAB_COLORS = {1:"#F5A3A8",2:"#F2A65A",3:"#F2C744",4:"#8FC18C",5:"#7FC2C7",6:"#7C9FE0",7:"#B48AD6",8:"#E38FBE"};
@@ -394,19 +464,23 @@ const BAB_TITLES = {
 
 /* ======================================================================
    KONFIGURASI BACKEND
-   Tempel URL Web App Google Apps Script kamu di sini (diakhiri /exec).
-   Lihat Code.gs untuk cara membuatnya.
    ====================================================================== */
 const API_URL = "https://script.google.com/macros/s/AKfycbyMjjEZ-9rHmJjWQQMPTg6Cz3vtbb5c6RoI1NoaNgvavT5h6XUcI771_YB_o8EnKROI/exec";
 
 /* ======================================================================
    STATE & UTILS
    ====================================================================== */
-const STORAGE_KEY = "mandarinfy_session_v1";
+const STORAGE_KEY = "mandarinfy_session_v2";
+const TOTAL_LISTENING = LISTENING.length;   // 35
+const TOTAL_READING = READING.length;       // 50
+const TOTAL_WRITING = SUSUN_HANZI.length;   // 10
+const TOTAL_SOAL = TOTAL_LISTENING + TOTAL_READING + TOTAL_WRITING; // 95
+
 let USER = {nama:"", kelas:""};
 let shuffledReading = [];
-let userReadingAnswers = {};   // index -> chosen text
-let userWritingAnswers = {};   // index -> text
+let userListeningAnswers = {};  // idx -> "√"/"×"/"A".. 
+let userReadingAnswers = {};    // idx -> chosen text
+let hanziState = [];            // per soal: {tiles(shuffled), assembled:[]}
 
 function shuffle(arr){
   const a = arr.slice();
@@ -431,32 +505,8 @@ function toast(msg){
   setTimeout(()=>t.classList.remove("show"), 2600);
 }
 
-/* ======================================================================
-   LOGIN
-   ====================================================================== */
-document.getElementById("btn-start").addEventListener("click", ()=>{
-  const nama = document.getElementById("in-nama").value.trim();
-  const kelas = document.getElementById("in-kelas").value.trim();
-  const err = document.getElementById("login-err");
-  if(!nama || !kelas){
-    err.style.display = "block";
-    return;
-  }
-  err.style.display = "none";
-  USER = {nama, kelas};
-  document.getElementById("exam-userinfo").innerHTML = `<b>${escapeHtml(nama)}</b> · ${escapeHtml(kelas)}`;
-  buildExam();
-  showScreen("screen-exam");
-});
-
-document.getElementById("btn-back-login").addEventListener("click", ()=>{
-  document.getElementById("in-nama").value="";
-  document.getElementById("in-kelas").value="";
-  showScreen("screen-login");
-});
-
 function escapeHtml(s){
-  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
 /* ======================================================================
@@ -467,29 +517,19 @@ function saveActiveSession(){
     submitted: false,
     user: USER,
     shuffledReading,
+    listeningAnswers: userListeningAnswers,
     readingAnswers: userReadingAnswers,
-    writingAnswers: userWritingAnswers
+    hanziState
   };
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); }catch(e){ /* storage penuh / tidak tersedia, abaikan */ }
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); }catch(e){ /* abaikan */ }
 }
 
 function saveSubmittedSession(result){
-  const payload = { submitted: true, result };
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); }catch(e){ /* abaikan */ }
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({ submitted:true, result })); }catch(e){ /* abaikan */ }
 }
 
 function clearSession(){
   try{ localStorage.removeItem(STORAGE_KEY); }catch(e){ /* abaikan */ }
-}
-
-function fillResultScreen(result){
-  document.getElementById("res-score").textContent = result.score;
-  document.getElementById("res-name").textContent = result.nama;
-  document.getElementById("rc-name").textContent = result.nama;
-  document.getElementById("rc-kelas").textContent = result.kelas;
-  document.getElementById("rc-score").textContent = `${result.score} / ${result.total}`;
-  document.getElementById("rc-writing").textContent = `${result.writingAnswered} / ${result.writingTotal}`;
-  document.getElementById("rc-time").textContent = new Date(result.waktu).toLocaleString("id-ID");
 }
 
 function tryRestoreSession(){
@@ -508,27 +548,111 @@ function tryRestoreSession(){
   if(data.user && data.shuffledReading){
     USER = data.user;
     shuffledReading = data.shuffledReading;
+    userListeningAnswers = data.listeningAnswers || {};
     userReadingAnswers = data.readingAnswers || {};
-    userWritingAnswers = data.writingAnswers || {};
+    hanziState = data.hanziState || [];
     document.getElementById("exam-userinfo").innerHTML = `<b>${escapeHtml(USER.nama)}</b> · ${escapeHtml(USER.kelas)}`;
-    renderExamDOM();
+    renderExamDOM(true);
     showScreen("screen-exam");
     toast("Ujianmu dilanjutkan dari progres terakhir.");
   }
 }
 
 /* ======================================================================
-   BUILD EXAM
+   LOGIN
    ====================================================================== */
-function buildExam(){
-  userReadingAnswers = {};
-  userWritingAnswers = {};
-  shuffledReading = READING.map((item, idx) => ({
-    ...item,
-    idx,
-    shuffledOptions: shuffle(item.options)
-  }));
+document.getElementById("btn-start").addEventListener("click", ()=>{
+  const nama = document.getElementById("in-nama").value.trim();
+  const kelas = document.getElementById("in-kelas").value.trim();
+  const err = document.getElementById("login-err");
+  if(!nama || !kelas){
+    err.style.display = "block";
+    return;
+  }
+  err.style.display = "none";
+  USER = {nama, kelas};
+  document.getElementById("exam-userinfo").innerHTML = `<b>${escapeHtml(nama)}</b> · ${escapeHtml(kelas)}`;
+  buildFreshExam();
+  showScreen("screen-exam");
+});
 
+document.getElementById("btn-back-login").addEventListener("click", ()=>{
+  clearSession();
+  document.getElementById("in-nama").value="";
+  document.getElementById("in-kelas").value="";
+  showScreen("screen-login");
+});
+
+/* ======================================================================
+   BUILD EXAM (baru) & RENDER EXAM (baru maupun restore)
+   ====================================================================== */
+function buildFreshExam(){
+  userListeningAnswers = {};
+  userReadingAnswers = {};
+  shuffledReading = READING.map((item, idx) => ({
+    ...item, idx, shuffledOptions: shuffle(item.options)
+  }));
+  hanziState = SUSUN_HANZI.map(item => ({ tiles: shuffle(item.tiles), assembled: [] }));
+  renderExamDOM(false);
+  saveActiveSession();
+}
+
+function renderExamDOM(){
+  renderListening();
+  renderReading();
+  renderHanzi();
+  updateProgress();
+}
+
+function renderListening(){
+  const mount = document.getElementById("listening-mount");
+  mount.innerHTML = "";
+  LISTENING.forEach((item, i) => {
+    const intro = LISTENING_SECTION_INTRO.find(s => s.from === i);
+    if(intro){
+      const box = document.createElement("div");
+      box.className = "section-intro";
+      box.textContent = intro.text;
+      mount.appendChild(box);
+    }
+    const opts = LISTENING_OPTS[item.type];
+    const optsClass = item.type === "tf" ? "opts opts-narrow" : (item.type === "letter" ? "opts opts-6" : "opts opts-narrow");
+    const card = document.createElement("div");
+    card.className = "qcard";
+    card.innerHTML = `
+      <div class="qhead">
+        <div class="qnum">${i+1}.</div>
+        <div class="qtext">Soal Listening No. ${i+1}</div>
+      </div>
+      <div class="${optsClass}">
+        ${opts.map(opt => `
+          <label class="opt" data-idx="${i}" data-val="${escapeHtml(opt)}">
+            <input type="radio" name="lst${i}" value="${escapeHtml(opt)}">
+            <span>${opt}</span>
+          </label>`).join("")}
+      </div>
+    `;
+    mount.appendChild(card);
+
+    card.querySelectorAll(".opt").forEach(label => {
+      const val = label.getAttribute("data-val");
+      if(userListeningAnswers[i] === val){
+        label.classList.add("selected");
+        label.querySelector("input").checked = true;
+      }
+      label.addEventListener("click", () => {
+        userListeningAnswers[i] = val;
+        card.querySelectorAll(".opt").forEach(l => l.classList.remove("selected"));
+        label.classList.add("selected");
+        label.querySelector("input").checked = true;
+        updateProgress();
+        saveActiveSession();
+      });
+    });
+  });
+}
+
+function renderReading(){
   const mount = document.getElementById("quiz-mount");
   mount.innerHTML = "";
   let lastBab = null;
@@ -542,11 +666,12 @@ function buildExam(){
         <div class="title">Bab ${item.bab} <span>${BAB_TITLES[item.bab]}</span></div>`;
       mount.appendChild(tab);
     }
+    const globalNo = 36 + i;
     const card = document.createElement("div");
     card.className = "qcard";
     card.innerHTML = `
       <div class="qhead">
-        <div class="qnum">${i+1}.</div>
+        <div class="qnum">${globalNo}.</div>
         <div class="qtext">${item.q}<span class="hint">${item.hint}</span></div>
       </div>
       <div class="opts">
@@ -558,88 +683,184 @@ function buildExam(){
       </div>
     `;
     mount.appendChild(card);
-  });
 
-  mount.querySelectorAll(".opt").forEach(label => {
-    label.addEventListener("click", () => {
-      const idx = label.getAttribute("data-idx");
+    card.querySelectorAll(".opt").forEach(label => {
       const val = label.getAttribute("data-val");
-      userReadingAnswers[idx] = val;
-      document.querySelectorAll(`.opt[data-idx="${idx}"]`).forEach(l => l.classList.remove("selected"));
-      label.classList.add("selected");
-      label.querySelector("input").checked = true;
-      updateProgress();
+      const idx = item.idx;
+      if(userReadingAnswers[idx] === val){
+        label.classList.add("selected");
+        label.querySelector("input").checked = true;
+      }
+      label.addEventListener("click", () => {
+        userReadingAnswers[idx] = val;
+        card.querySelectorAll(".opt").forEach(l => l.classList.remove("selected"));
+        label.classList.add("selected");
+        label.querySelector("input").checked = true;
+        updateProgress();
+        saveActiveSession();
+      });
     });
   });
+}
 
+function renderHanzi(){
   const wmount = document.getElementById("writing-mount");
   wmount.innerHTML = "";
-  WRITING.forEach((item, i) => {
+  SUSUN_HANZI.forEach((item, i) => {
+    const globalNo = 86 + i;
     const card = document.createElement("div");
     card.className = "qcard writing-card";
     card.innerHTML = `
       <div class="qhead">
-        <div class="qnum">W${i+1}.</div>
-        <div class="qtext">${item.prompt}<span class="hint">Bab ${item.bab} · ${BAB_TITLES[item.bab]}</span></div>
+        <div class="qnum">${globalNo}.</div>
+        <div class="qtext">Susun jadi kalimat: <b>"${escapeHtml(item.meaning)}"</b><span class="hint">Bab ${item.bab} · ${BAB_TITLES[item.bab]}</span></div>
       </div>
-      <textarea placeholder="Tulis jawabanmu dalam bahasa Mandarin di sini…" data-widx="${i}"></textarea>
+      <div class="assembled-row" id="assembled-${i}"></div>
+      <div class="pool-row" id="pool-${i}"></div>
+      <div class="hanzi-tools"><button type="button" data-reset="${i}">↺ Reset</button></div>
     `;
     wmount.appendChild(card);
-  });
-  wmount.querySelectorAll("textarea").forEach(ta => {
-    ta.addEventListener("input", () => {
-      userWritingAnswers[ta.getAttribute("data-widx")] = ta.value;
+    renderHanziQuestion(i);
+
+    card.querySelector(`[data-reset="${i}"]`).addEventListener("click", () => {
+      hanziState[i].assembled = [];
+      renderHanziQuestion(i);
       updateProgress();
+      saveActiveSession();
     });
   });
+}
 
-  updateProgress();
+function renderHanziQuestion(i){
+  const state = hanziState[i];
+  const assembledMount = document.getElementById(`assembled-${i}`);
+  const poolMount = document.getElementById(`pool-${i}`);
+
+  assembledMount.innerHTML = "";
+  if(state.assembled.length === 0){
+    assembledMount.innerHTML = `<span class="placeholder">Klik kata di bawah untuk menyusun kalimat…</span>`;
+  }else{
+    state.assembled.forEach((word, pos) => {
+      const chip = document.createElement("div");
+      chip.className = "tile in-answer";
+      chip.textContent = word;
+      chip.addEventListener("click", () => {
+        state.assembled.splice(pos, 1);
+        renderHanziQuestion(i);
+        updateProgress();
+        saveActiveSession();
+      });
+      assembledMount.appendChild(chip);
+    });
+  }
+
+  poolMount.innerHTML = "";
+  const usedCounts = {};
+  state.assembled.forEach(w => usedCounts[w] = (usedCounts[w]||0)+1);
+  const shownCounts = {};
+  state.tiles.forEach(word => {
+    shownCounts[word] = (shownCounts[word]||0)+1;
+    if(shownCounts[word] <= (usedCounts[word]||0)) return; // sudah dipakai, sembunyikan salinan ini
+    const chip = document.createElement("div");
+    chip.className = "tile";
+    chip.textContent = word;
+    chip.addEventListener("click", () => {
+      state.assembled.push(word);
+      renderHanziQuestion(i);
+      updateProgress();
+      saveActiveSession();
+    });
+    poolMount.appendChild(chip);
+  });
 }
 
 function updateProgress(){
-  const total = READING.length + WRITING.length;
-  const done = Object.keys(userReadingAnswers).length + Object.values(userWritingAnswers).filter(v=>v && v.trim()!== "").length;
-  document.getElementById("progress-text").textContent = `${done} dari ${total} soal terjawab`;
-  document.getElementById("progress-fill").style.width = `${(done/total)*100}%`;
+  const doneListening = Object.keys(userListeningAnswers).length;
+  const doneReading = Object.keys(userReadingAnswers).length;
+  const doneHanzi = hanziState.filter(s => s.assembled.length === s.tiles.length && s.tiles.length>0).length;
+  const done = doneListening + doneReading + doneHanzi;
+  document.getElementById("progress-text").textContent = `${done} dari ${TOTAL_SOAL} soal terjawab`;
+  document.getElementById("progress-fill").style.width = `${(done/TOTAL_SOAL)*100}%`;
 }
 
 /* ======================================================================
-   SUBMIT
+   SUBMIT & PENILAIAN
    ====================================================================== */
 document.getElementById("btn-submit").addEventListener("click", async () => {
-  const answeredReading = Object.keys(userReadingAnswers).length;
-  if(answeredReading < READING.length){
-    if(!confirm(`Baru ${answeredReading} dari ${READING.length} soal reading yang dijawab. Tetap kumpulkan?`)) return;
+  const doneListening = Object.keys(userListeningAnswers).length;
+  const doneReading = Object.keys(userReadingAnswers).length;
+  const doneHanzi = hanziState.filter(s => s.assembled.length === s.tiles.length && s.tiles.length>0).length;
+  const totalDone = doneListening + doneReading + doneHanzi;
+  if(totalDone < TOTAL_SOAL){
+    if(!confirm(`Baru ${totalDone} dari ${TOTAL_SOAL} soal yang dijawab. Tetap kumpulkan?`)) return;
   }
 
-  let score = 0;
-  shuffledReading.forEach(item => {
-    if(userReadingAnswers[item.idx] === item.answer) score++;
+  // ---- nilai listening ----
+  let skorListening = 0;
+  const wrongListening = [];
+  LISTENING.forEach((item, i) => {
+    const chosen = userListeningAnswers[i] || "";
+    if(chosen === item.answer){ skorListening++; }
+    else{ wrongListening.push({ no: i+1, chosen: chosen || "(kosong)", correct: item.answer }); }
   });
 
-  const writingList = WRITING.map((item, i) => ({
-    bab: item.bab,
-    prompt: item.prompt,
-    jawaban: userWritingAnswers[i] || ""
-  }));
+  // ---- nilai reading ----
+  let skorReading = 0;
+  const wrongReading = [];
+  shuffledReading.forEach((item, i) => {
+    const chosen = userReadingAnswers[item.idx] || "";
+    if(chosen === item.answer){ skorReading++; }
+    else{ wrongReading.push({ no: 36+i, q: item.q, chosen: chosen || "(kosong)", correct: item.answer }); }
+  });
+
+  // ---- nilai susun hanzi ----
+  let skorWriting = 0;
+  const wrongWriting = [];
+  const writingList = [];
+  SUSUN_HANZI.forEach((item, i) => {
+    const assembled = hanziState[i].assembled;
+    const jawabanText = assembled.join("");
+    const correctText = item.correctOrder.join("");
+    const isCorrect = assembled.length === item.correctOrder.length &&
+      assembled.every((w, pos) => w === item.correctOrder[pos]);
+    if(isCorrect){ skorWriting++; }
+    else{ wrongWriting.push({ no: 86+i, meaning: item.meaning, chosen: jawabanText || "(kosong)", correct: correctText }); }
+    writingList.push({ bab: item.bab, prompt: item.meaning, jawaban: jawabanText });
+  });
+
+  const totalBenar = skorListening + skorReading + skorWriting;
+
+  const result = {
+    nama: USER.nama,
+    kelas: USER.kelas,
+    waktu: new Date().toISOString(),
+    totalBenar, totalSoal: TOTAL_SOAL,
+    listening: { benar: skorListening, total: TOTAL_LISTENING },
+    reading: { benar: skorReading, total: TOTAL_READING },
+    writing: { benar: skorWriting, total: TOTAL_WRITING },
+    wrongListening, wrongReading, wrongWriting
+  };
 
   const submission = {
     nama: USER.nama,
     kelas: USER.kelas,
-    skorReading: score,
-    totalReading: READING.length,
+    skorReading: skorReading,
+    totalReading: TOTAL_READING,
+    skorListening: skorListening,
+    totalListening: TOTAL_LISTENING,
+    skorWriting: skorWriting,
+    totalWriting: TOTAL_WRITING,
     writing: writingList,
-    waktu: new Date().toISOString()
+    waktu: result.waktu
   };
 
   document.getElementById("btn-submit").disabled = true;
   document.getElementById("btn-submit").textContent = "Mengirim…";
 
   try{
-    if(!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbzQ_l-QAckvGxqWzPs9dq5m0JyTw2TeWZuFg2QIUhMI3Fa3MqDT8-5eYVGMGmrZUfeT/exec")){
-      throw new Error("https://script.google.com/macros/s/AKfycbzQ_l-QAckvGxqWzPs9dq5m0JyTw2TeWZuFg2QIUhMI3Fa3MqDT8-5eYVGMGmrZUfeT/exec");
+    if(!API_URL || API_URL.includes("PASTE_URL")){
+      throw new Error("API_URL belum diisi");
     }
-    // dikirim sebagai text/plain supaya tidak kena preflight CORS di Apps Script
     await fetch(API_URL, {
       method: "POST",
       body: JSON.stringify(submission)
@@ -650,17 +871,71 @@ document.getElementById("btn-submit").addEventListener("click", async () => {
     toast("Gagal mengirim ke server. Cek koneksi internet / konfigurasi API_URL.");
   }
 
-  document.getElementById("res-score").textContent = score;
-  document.getElementById("res-name").textContent = USER.nama;
-  document.getElementById("rc-name").textContent = USER.nama;
-  document.getElementById("rc-kelas").textContent = USER.kelas;
-  document.getElementById("rc-score").textContent = `${score} / ${READING.length}`;
-  document.getElementById("rc-writing").textContent = `${writingList.filter(w=>w.jawaban.trim()!=="").length} / ${WRITING.length}`;
-  document.getElementById("rc-time").textContent = new Date().toLocaleString("id-ID");
-
+  fillResultScreen(result);
+  saveSubmittedSession(result);
   showScreen("screen-result");
 });
 
+function fillResultScreen(result){
+  document.getElementById("res-score").textContent = result.totalBenar;
+  document.querySelector(".seal-big .of").textContent = `/ ${result.totalSoal} BENAR`;
+  document.getElementById("res-name").textContent = result.nama;
+  document.getElementById("rc-name").textContent = result.nama;
+  document.getElementById("rc-kelas").textContent = result.kelas;
+  document.getElementById("rc-listening").textContent = `${result.listening.benar} / ${result.listening.total}`;
+  document.getElementById("rc-score").textContent = `${result.reading.benar} / ${result.reading.total}`;
+  document.getElementById("rc-writing").textContent = `${result.writing.benar} / ${result.writing.total}`;
+  document.getElementById("rc-time").textContent = new Date(result.waktu).toLocaleString("id-ID");
+
+  const wrapEl = document.getElementById("wrong-wrap");
+  const totalWrong = (result.wrongListening||[]).length + (result.wrongReading||[]).length + (result.wrongWriting||[]).length;
+  if(totalWrong === 0){
+    wrapEl.innerHTML = `<div class="all-correct-note">🎉 Semua jawaban benar! Kerja bagus.</div>`;
+    return;
+  }
+
+  let html = `<h3>Soal yang Salah Dijawab</h3>`;
+
+  if(result.wrongListening && result.wrongListening.length){
+    html += `<div class="wrong-group"><div class="gtitle">🎧 Listening (${result.wrongListening.length} salah)</div>`;
+    result.wrongListening.forEach(w => {
+      html += `<div class="wrong-item">
+        <span class="no">No. ${w.no}</span>
+        <div class="compare">Jawabanmu: <b>${escapeHtml(w.chosen)}</b> — Kunci: <span class="ok">${escapeHtml(w.correct)}</span></div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if(result.wrongReading && result.wrongReading.length){
+    html += `<div class="wrong-group"><div class="gtitle">📖 Reading (${result.wrongReading.length} salah)</div>`;
+    result.wrongReading.forEach(w => {
+      html += `<div class="wrong-item">
+        <span class="no">No. ${w.no}</span><span class="q">${w.q}</span>
+        <div class="compare">Jawabanmu: <b>${escapeHtml(w.chosen)}</b> — Kunci: <span class="ok">${escapeHtml(w.correct)}</span></div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if(result.wrongWriting && result.wrongWriting.length){
+    html += `<div class="wrong-group"><div class="gtitle">✍️ Susun Hanzi (${result.wrongWriting.length} salah)</div>`;
+    result.wrongWriting.forEach(w => {
+      html += `<div class="wrong-item">
+        <span class="no">No. ${w.no}</span><span class="q">${escapeHtml(w.meaning)}</span>
+        <div class="compare">Susunanmu: <b>${escapeHtml(w.chosen)}</b> — Kunci: <span class="ok">${escapeHtml(w.correct)}</span></div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  wrapEl.innerHTML = html;
+}
+
+/* ======================================================================
+   INIT
+   ====================================================================== */
+tryRestoreSession();
 </script>
 </body>
 </html>
