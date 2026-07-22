@@ -164,7 +164,7 @@
 const ACCESS_CODE = "MANDARINFY2026";
 
 /* !!! TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DISINI (berakhiran /exec) !!! */
-const API_URL = "https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz8hg73UvDDPL1bW8ez28TvBLED_XIiI_oYnLuI8uTbkcxPTaRh39hRf8VENBNAJ-19VQ/exec";
 
 let sortKey = "waktu";
 let sortDir = -1; // -1 = terbaru dulu / desc
@@ -223,7 +223,7 @@ async function loadData(){
   const mount = document.getElementById("table-mount");
   mount.innerHTML = `<div class="empty-note">Memuat data terbaru dari Google Sheets…</div>`;
   
-  if(!API_URL || API_URL.startsWith("https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/execL")){
+  if(!API_URL || API_URL.startsWith("https://script.google.com/macros/s/AKfycbz8hg73UvDDPL1bW8ez28TvBLED_XIiI_oYnLuI8uTbkcxPTaRh39hRf8VENBNAJ-19VQ/exec")){
       mount.innerHTML = `<div class="empty-note" style="color:var(--red);">Gagal: API_URL belum diisi.<br>Silakan deploy Apps Script dan tempel URL Web App (/exec) ke dalam kode HTML ini.</div>`;
       return;
   }
