@@ -131,17 +131,15 @@
   <div class="wrap">
     <div class="stats">
       <div class="stat-card"><div class="num" id="st-total">0</div><div class="label">Peserta mengumpulkan</div></div>
-      <div class="stat-card"><div class="num" id="st-avg">0</div><div class="label">Rata-rata skor reading (Benar)</div></div>
-      <div class="stat-card"><div class="num" id="st-max">0</div><div class="label">Skor tertinggi (reading)</div></div>
-      <div class="stat-card"><div class="num" id="st-min">0</div><div class="label">Skor terendah (reading)</div></div>
-      <div class="stat-card"><div class="num" id="st-avg-listening">0</div><div class="label">Rata-rata skor listening</div></div>
-      <div class="stat-card"><div class="num" id="st-avg-writing">0</div><div class="label">Rata-rata skor susun hanzi</div></div>
+      <div class="stat-card"><div class="num" id="st-avg">0</div><div class="label">Rata-rata skor benar (cth. 50)</div></div>
+      <div class="stat-card"><div class="num" id="st-max">0</div><div class="label">Skor tertinggi</div></div>
+      <div class="stat-card"><div class="num" id="st-min">0</div><div class="label">Skor terendah</div></div>
     </div>
 
     <div class="top-actions">
       <div>
         <h2>Rekap Semua Peserta</h2>
-        <div class="sub">Menampilkan data real-time dari Google Sheets.</div>
+        <div class="sub">Menampilkan data mentah dari Google Sheets. Kolom individual W1, W2, dst. dipetakan di sini.</div>
       </div>
       <div class="actions">
         <button class="btn btn-ghost" id="btn-refresh">↻ Refresh</button>
@@ -155,7 +153,7 @@
     </div>
 
     <div id="table-mount"><div class="empty-note">Memuat data…</div></div>
-    <div class="footer-note">Mandarinfy — Panel Pengawas. Data direkap otomatis dari setiap pengumpulan ujian.</div>
+    <div class="footer-note">Mandarinfy — Panel Pengawas. Data direkap otomatis dari setiap pengumpulan ujian midterm.</div>
   </div>
 </div>
 
@@ -163,7 +161,7 @@
 /* ganti kode akses ini sesuai kebutuhan sekolah/kelasmu */
 const ACCESS_CODE = "MANDARINFY2026";
 
-/* !!! TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DISINI (berakhiran /exec) !!! */
+/* !!! TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DISINI !!! */
 const API_URL = "https://script.google.com/macros/s/AKfycbz8hg73UvDDPL1bW8ez28TvBLED_XIiI_oYnLuI8uTbkcxPTaRh39hRf8VENBNAJ-19VQ/exec";
 
 let sortKey = "waktu";
@@ -181,19 +179,11 @@ function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-// Format Tanggal ISO ke Lokal Rapi
+// Format Tanggal: Tanggal ISO dari GAS (UTC) dikonversi ke tanggal lokal
 function formatLocaleDate(isoString) {
   if (!isoString) return "—";
-  try {
-    const d = new Date(isoString);
-    if (isNaN(d.getTime())) return "—";
-    return d.toLocaleString("id-ID", { 
-      dateStyle: "medium", 
-      timeStyle: "short" 
-    }).replace(",", "");
-  } catch (e) {
-    return "—";
-  }
+  const d = new Date(isoString);
+  return d.toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" });
 }
 
 document.getElementById("btn-unlock").addEventListener("click", tryUnlock);
@@ -221,10 +211,10 @@ document.getElementById("btn-refresh").addEventListener("click", loadData);
 
 async function loadData(){
   const mount = document.getElementById("table-mount");
-  mount.innerHTML = `<div class="empty-note">Memuat data terbaru dari Google Sheets…</div>`;
+  mount.innerHTML = `<div class="empty-note">Memuat data…</div>`;
   
-  if(!API_URL || API_URL.startsWith("https://script.google.com/macros/s/AKfycbz8hg73UvDDPL1bW8ez28TvBLED_XIiI_oYnLuI8uTbkcxPTaRh39hRf8VENBNAJ-19VQ/exec")){
-      mount.innerHTML = `<div class="empty-note" style="color:var(--red);">Gagal: API_URL belum diisi.<br>Silakan deploy Apps Script dan tempel URL Web App (/exec) ke dalam kode HTML ini.</div>`;
+  if(!API_URL || API_URL.startsWith("MASUKKAN_URL")){
+      mount.innerHTML = `<div class="empty-note">Gagal: URL API belum diisi. Silakan deployment Apps Script Anda dan tempel URL Web App-nya di dalam kode HTML Pengawas ini.</div>`;
       return;
   }
 
@@ -258,23 +248,19 @@ async function loadData(){
       
       if (writingAnswers.length > maxWritingAnswers) {
           maxWritingAnswers = writingAnswers.length;
+          // console.log("New max writing answers: " + maxWritingAnswers);
       }
-
-      // Pastikan angka valid
-      const sReading = parseInt(r.SkorBenar);
-      const tReading = parseInt(r.TotalSoal);
 
       return {
         waktu: r.Waktu, // Ini string ISO dari backend
         nama: r.Nama,
         kelas: r.Kelas,
-        skorReading: isNaN(sReading) ? 0 : sReading,
-        totalReading: isNaN(tReading) ? 0 : tReading,
-        // Gunakan fungsi helper untuk parse angka opsional
-        skorListening: parseOptionalInt(r.SkorListening),
-        totalListening: parseOptionalInt(r.TotalListening),
-        skorWriting: parseOptionalInt(r.SkorWriting),
-        totalWriting: parseOptionalInt(r.TotalWriting),
+        skorReading: Number(r.SkorBenar),
+        totalReading: Number(r.TotalSoal),
+        skorListening: r.SkorListening !== null && r.SkorListening !== "" ? Number(r.SkorListening) : null,
+        totalListening: r.TotalListening !== null && r.TotalListening !== "" ? Number(r.TotalListening) : null,
+        skorWriting: r.SkorWriting !== null && r.SkorWriting !== "" ? Number(r.SkorWriting) : null,
+        totalWriting: r.TotalWriting !== null && r.TotalWriting !== "" ? Number(r.TotalWriting) : null,
         writingAnswers: writingAnswers // Array jawaban W1, W2 dst
       };
     });
@@ -284,14 +270,8 @@ async function loadData(){
     renderTable(sortRows(rows));
   }catch(e){
     console.error(e);
-    mount.innerHTML = `<div class="empty-note" style="color:var(--red);">Gagal memuat data.<br>Pastikan Deployment Web App di Apps Script diset access-nya ke 'Anyone'.<br>Error: ${e.message}</div>`;
+    mount.innerHTML = `<div class="empty-note">Gagal memuat data. Cek koneksi internet / konfigurasi API_URL, lalu refresh.</div>`;
   }
-}
-
-function parseOptionalInt(val) {
-    if (val === undefined || val === null || val === "") return null;
-    const p = parseInt(val);
-    return isNaN(p) ? null : p;
 }
 
 function renderStats(rows){
@@ -300,39 +280,21 @@ function renderStats(rows){
     document.getElementById("st-avg").textContent = "0";
     document.getElementById("st-max").textContent = "0";
     document.getElementById("st-min").textContent = "0";
-    document.getElementById("st-avg-listening").textContent = "0";
-    document.getElementById("st-avg-writing").textContent = "0";
     return;
   }
-  
-  // Statistik Reading (Jumlah Benar)
   const scores = rows.map(r => r.skorReading);
   const avg = (scores.reduce((a,b)=>a+b,0) / scores.length).toFixed(1);
   document.getElementById("st-avg").textContent = avg;
   document.getElementById("st-max").textContent = Math.max(...scores);
   document.getElementById("st-min").textContent = Math.min(...scores);
-
-  // Statistik Opsional (Listening & Manual Writing)
-  const listeningScores = rows.map(r => r.skorListening).filter(v => v !== null);
-  const writingManualScores = rows.map(r => r.skorWriting).filter(v => v !== null);
-  
-  document.getElementById("st-avg-listening").textContent = listeningScores.length
-    ? (listeningScores.reduce((a,b)=>a+b,0) / listeningScores.length).toFixed(1) : "—";
-    
-  document.getElementById("st-avg-writing").textContent = writingManualScores.length
-    ? (writingManualScores.reduce((a,b)=>a+b,0) / writingManualScores.length).toFixed(1) : "—";
 }
 
 function sortRows(rows){
   const sorted = rows.slice().sort((a,b) => {
     let av, bv;
-    if(sortKey === "waktu"){ 
-        // Bandingkan string ISO langsung secara alfabetis (descending waktu)
-        av = a.waktu || ""; bv = b.waktu || ""; 
-    }
+    if(sortKey === "waktu"){ av = new Date(a.waktu).getTime(); bv = new Date(b.waktu).getTime(); }
     else if(sortKey === "skorReading"){ av = a.skorReading; bv = b.skorReading; }
     else { av = (a[sortKey]||"").toString().toLowerCase(); bv = (b[sortKey]||"").toString().toLowerCase(); }
-    
     if(av < bv) return -1 * sortDir;
     if(av > bv) return 1 * sortDir;
     return 0;
@@ -357,9 +319,9 @@ function renderTable(rows){
     <th class="sortable" data-key="waktu">Waktu ⇅</th>
     <th class="sortable" data-key="nama">Nama ⇅</th>
     <th class="sortable" data-key="kelas">Kelas ⇅</th>
-    <th class="sortable" data-key="skorReading">Reading ⇅</th>
+    <th class="sortable" data-key="skorReading">Skor Benar ⇅</th>
     <th>Listening</th>
-    <th>Skor HZ (Man)</th>
+    <th>HZ (Manual)</th>
     ${writingHeaderCols.join("")}
     </tr></thead><tbody>`;
     
@@ -374,7 +336,7 @@ function renderTable(rows){
       <td>${formatLocaleDate(r.waktu)}</td>
       <td>${escapeHtml(r.nama)}</td>
       <td>${escapeHtml(r.kelas)}</td>
-      <td class="score-cell">${r.skorReading} <span style="font-weight:400; color:#8a7b6a; font-size:11px">/${r.totalReading}</span></td>
+      <td class="score-cell">${r.skorReading} / ${r.totalReading}</td>
       <td class="score-cell">${r.skorListening !== null ? r.skorListening + " / " + r.totalListening : "—"}</td>
       <td class="score-cell">${r.skorWriting !== null ? r.skorWriting + " / " + r.totalWriting : "—"}</td>
       ${writingCells.join("")}
@@ -413,7 +375,7 @@ document.getElementById("btn-export-csv").addEventListener("click", () => {
   const writingColsCSV = [];
   for(let i=1; i<=maxWritingAnswers; i++) writingColsCSV.push(`W${i}`);
   
-  const header = ["Waktu Submit", "Nama", "Kelas", "Reading Benar", "Total Reading", "Skor Listening", "Skor HZ (Manual)", ...writingColsCSV];
+  const header = ["Waktu Submit", "Nama", "Kelas", "Skor Benar", "Total Soal", "Skor Listening", "HZ (Manual)", ...writingColsCSV];
   
   // Data CSV (pake BOM agar karakter cina/spesial aman di Excel)
   let csvContent = "\uFEFF"; 
@@ -447,7 +409,7 @@ document.getElementById("btn-export-csv").addEventListener("click", () => {
   a.download = `mandarinfy-rekap-${Date.now()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  toast("CSV berhasil diunduh.");
+  toast("CSV berhasil diunduh — bisa langsung diimpor ke Google Sheets.");
 });
 </script>
 </body>
