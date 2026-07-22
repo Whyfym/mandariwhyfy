@@ -131,17 +131,17 @@
   <div class="wrap">
     <div class="stats">
       <div class="stat-card"><div class="num" id="st-total">0</div><div class="label">Peserta mengumpulkan</div></div>
-      <div class="stat-card"><div class="num" id="st-avg">0</div><div class="label">Rata-rata skor reading (dari 50)</div></div>
+      <div class="stat-card"><div class="num" id="st-avg">0</div><div class="label">Rata-rata skor reading (Benar)</div></div>
       <div class="stat-card"><div class="num" id="st-max">0</div><div class="label">Skor tertinggi (reading)</div></div>
       <div class="stat-card"><div class="num" id="st-min">0</div><div class="label">Skor terendah (reading)</div></div>
-      <div class="stat-card"><div class="num" id="st-avg-listening">0</div><div class="label">Rata-rata skor listening (dari 35)</div></div>
-      <div class="stat-card"><div class="num" id="st-avg-writing">0</div><div class="label">Rata-rata skor susun hanzi (dari 10)</div></div>
+      <div class="stat-card"><div class="num" id="st-avg-listening">0</div><div class="label">Rata-rata skor listening</div></div>
+      <div class="stat-card"><div class="num" id="st-avg-writing">0</div><div class="label">Rata-rata skor susun hanzi</div></div>
     </div>
 
     <div class="top-actions">
       <div>
         <h2>Rekap Semua Peserta</h2>
-        <div class="sub">Jumlah jawaban benar reading per peserta, plus jawaban writing (tanpa koreksi otomatis).</div>
+        <div class="sub">Menampilkan data real-time dari Google Sheets.</div>
       </div>
       <div class="actions">
         <button class="btn btn-ghost" id="btn-refresh">↻ Refresh</button>
@@ -163,12 +163,13 @@
 /* ganti kode akses ini sesuai kebutuhan sekolah/kelasmu */
 const ACCESS_CODE = "MANDARINFY2026";
 
-/* Tempel URL Web App Google Apps Script yang sama seperti di mandarinfy.html */
+/* !!! TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DISINI (berakhiran /exec) !!! */
 const API_URL = "https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/exec";
 
 let sortKey = "waktu";
 let sortDir = -1; // -1 = terbaru dulu / desc
 let allRows = [];
+let maxWritingAnswers = 0; // Untuk dinamasi kolom W1, W2 dst
 
 function toast(msg){
   const t = document.getElementById("toast");
@@ -176,7 +177,23 @@ function toast(msg){
   setTimeout(()=>t.classList.remove("show"), 2600);
 }
 function escapeHtml(s){
+  if (s === null || s === undefined) return "";
   return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// Format Tanggal ISO ke Lokal Rapi
+function formatLocaleDate(isoString) {
+  if (!isoString) return "—";
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleString("id-ID", { 
+      dateStyle: "medium", 
+      timeStyle: "short" 
+    }).replace(",", "");
+  } catch (e) {
+    return "—";
+  }
 }
 
 document.getElementById("btn-unlock").addEventListener("click", tryUnlock);
@@ -204,41 +221,77 @@ document.getElementById("btn-refresh").addEventListener("click", loadData);
 
 async function loadData(){
   const mount = document.getElementById("table-mount");
-  mount.innerHTML = `<div class="empty-note">Memuat data…</div>`;
-  try{
-    if(!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/exec")){
-      mount.innerHTML = `<div class="empty-note">API_URL belum diisi. Tempel URL Google Apps Script kamu di bagian atas &lt;script&gt; pada file ini.</div>`;
+  mount.innerHTML = `<div class="empty-note">Memuat data terbaru dari Google Sheets…</div>`;
+  
+  if(!API_URL || API_URL.startsWith("https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/execL")){
+      mount.innerHTML = `<div class="empty-note" style="color:var(--red);">Gagal: API_URL belum diisi.<br>Silakan deploy Apps Script dan tempel URL Web App (/exec) ke dalam kode HTML ini.</div>`;
       return;
-    }
-    const res = await fetch(API_URL, { method: "GET" });
+  }
+
+  try{
+    // Tambah timestamp agar tidak terkena cache browser
+    const res = await fetch(`${API_URL}?_=${Date.now()}`, { method: "GET" });
     const raw = await res.json();
-    // ubah dari format kolom sheet (Waktu, Nama, Kelas, SkorBenar, TotalSoal, W1..Wn)
-    // ke bentuk internal {waktu, nama, kelas, skorReading, totalReading, writing:[{jawaban}]}
+    
+    if (raw.error) {
+        throw new Error(raw.error);
+    }
+
+    if (!Array.isArray(raw) || raw.length === 0) {
+        allRows = [];
+        renderStats([]);
+        mount.innerHTML = `<div class="empty-note">Belum ada data peserta yang mengumpulkan ujian.</div>`;
+        return;
+    }
+
+    // Ubah format data agar sesuai kebutuhan internal
+    maxWritingAnswers = 0;
     const rows = raw.map(r => {
-      const writing = Object.keys(r)
-        .filter(k => /^W\d+$/.test(k))
-        .sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)))
-        .map(k => ({ jawaban: r[k] }));
+      // Ambil semua kunci berawalan 'W' diikuti angka
+      const writingAnswers = [];
+      Object.keys(r).forEach(key => {
+          if (/^W\d+$/.test(key)) {
+              const index = parseInt(key.substring(1)) - 1;
+              writingAnswers[index] = r[key];
+          }
+      });
+      
+      if (writingAnswers.length > maxWritingAnswers) {
+          maxWritingAnswers = writingAnswers.length;
+      }
+
+      // Pastikan angka valid
+      const sReading = parseInt(r.SkorBenar);
+      const tReading = parseInt(r.TotalSoal);
+
       return {
-        waktu: r.Waktu,
+        waktu: r.Waktu, // Ini string ISO dari backend
         nama: r.Nama,
         kelas: r.Kelas,
-        skorReading: Number(r.SkorBenar),
-        totalReading: Number(r.TotalSoal),
-        skorListening: r.SkorListening !== undefined && r.SkorListening !== "" ? Number(r.SkorListening) : null,
-        totalListening: r.TotalListening !== undefined && r.TotalListening !== "" ? Number(r.TotalListening) : null,
-        skorWriting: r.SkorWriting !== undefined && r.SkorWriting !== "" ? Number(r.SkorWriting) : null,
-        totalWriting: r.TotalWriting !== undefined && r.TotalWriting !== "" ? Number(r.TotalWriting) : null,
-        writing
+        skorReading: isNaN(sReading) ? 0 : sReading,
+        totalReading: isNaN(tReading) ? 0 : tReading,
+        // Gunakan fungsi helper untuk parse angka opsional
+        skorListening: parseOptionalInt(r.SkorListening),
+        totalListening: parseOptionalInt(r.TotalListening),
+        skorWriting: parseOptionalInt(r.SkorWriting),
+        totalWriting: parseOptionalInt(r.TotalWriting),
+        writingAnswers: writingAnswers // Array jawaban W1, W2 dst
       };
     });
+
     allRows = rows;
     renderStats(rows);
     renderTable(sortRows(rows));
   }catch(e){
     console.error(e);
-    mount.innerHTML = `<div class="empty-note">Gagal memuat data. Cek koneksi internet / konfigurasi API_URL, lalu refresh.</div>`;
+    mount.innerHTML = `<div class="empty-note" style="color:var(--red);">Gagal memuat data.<br>Pastikan Deployment Web App di Apps Script diset access-nya ke 'Anyone'.<br>Error: ${e.message}</div>`;
   }
+}
+
+function parseOptionalInt(val) {
+    if (val === undefined || val === null || val === "") return null;
+    const p = parseInt(val);
+    return isNaN(p) ? null : p;
 }
 
 function renderStats(rows){
@@ -251,28 +304,37 @@ function renderStats(rows){
     document.getElementById("st-avg-writing").textContent = "0";
     return;
   }
+  
+  // Statistik Reading (Jumlah Benar)
   const scores = rows.map(r => r.skorReading);
   const avg = (scores.reduce((a,b)=>a+b,0) / scores.length).toFixed(1);
   document.getElementById("st-avg").textContent = avg;
   document.getElementById("st-max").textContent = Math.max(...scores);
   document.getElementById("st-min").textContent = Math.min(...scores);
 
-  const listeningScores = rows.map(r => r.skorListening).filter(v => v !== null && !isNaN(v));
-  const writingScores = rows.map(r => r.skorWriting).filter(v => v !== null && !isNaN(v));
+  // Statistik Opsional (Listening & Manual Writing)
+  const listeningScores = rows.map(r => r.skorListening).filter(v => v !== null);
+  const writingManualScores = rows.map(r => r.skorWriting).filter(v => v !== null);
+  
   document.getElementById("st-avg-listening").textContent = listeningScores.length
-    ? (listeningScores.reduce((a,b)=>a+b,0) / listeningScores.length).toFixed(1) : "-";
-  document.getElementById("st-avg-writing").textContent = writingScores.length
-    ? (writingScores.reduce((a,b)=>a+b,0) / writingScores.length).toFixed(1) : "-";
+    ? (listeningScores.reduce((a,b)=>a+b,0) / listeningScores.length).toFixed(1) : "—";
+    
+  document.getElementById("st-avg-writing").textContent = writingManualScores.length
+    ? (writingManualScores.reduce((a,b)=>a+b,0) / writingManualScores.length).toFixed(1) : "—";
 }
 
 function sortRows(rows){
   const sorted = rows.slice().sort((a,b) => {
     let av, bv;
-    if(sortKey === "waktu"){ av = new Date(a.waktu).getTime(); bv = new Date(b.waktu).getTime(); }
+    if(sortKey === "waktu"){ 
+        // Bandingkan string ISO langsung secara alfabetis (descending waktu)
+        av = a.waktu || ""; bv = b.waktu || ""; 
+    }
     else if(sortKey === "skorReading"){ av = a.skorReading; bv = b.skorReading; }
     else { av = (a[sortKey]||"").toString().toLowerCase(); bv = (b[sortKey]||"").toString().toLowerCase(); }
-    if(av < bv) return -1*sortDir;
-    if(av > bv) return 1*sortDir;
+    
+    if(av < bv) return -1 * sortDir;
+    if(av > bv) return 1 * sortDir;
     return 0;
   });
   return sorted;
@@ -284,27 +346,38 @@ function renderTable(rows){
     mount.innerHTML = `<div class="empty-note">Tidak ada peserta yang cocok.</div>`;
     return;
   }
-  const writingCount = (rows[0].writing || []).length;
-  const writingCols = Array.from({length: writingCount}, (_,i)=>`W${i+1}`);
+  
+  // Buat header W1, W2 dst secara dinamis berdasarkan data terbesar
+  const writingHeaderCols = [];
+  for(let i=1; i<=maxWritingAnswers; i++) {
+      writingHeaderCols.push(`<th>W${i}</th>`);
+  }
 
   let html = `<div class="table-scroll"><table class="sheet"><thead><tr>
     <th class="sortable" data-key="waktu">Waktu ⇅</th>
     <th class="sortable" data-key="nama">Nama ⇅</th>
     <th class="sortable" data-key="kelas">Kelas ⇅</th>
-    <th class="sortable" data-key="skorReading">Skor Benar ⇅</th>
+    <th class="sortable" data-key="skorReading">Reading ⇅</th>
     <th>Listening</th>
-    <th>Susun Hanzi</th>
-    ${writingCols.map(c=>`<th>${c}</th>`).join("")}
+    <th>Skor HZ (Man)</th>
+    ${writingHeaderCols.join("")}
     </tr></thead><tbody>`;
+    
   rows.forEach(r => {
+    // Siapkan kolom jawaban writing
+    const writingCells = [];
+    for(let i=0; i<maxWritingAnswers; i++) {
+        writingCells.push(`<td class="writing-cell">${escapeHtml(r.writingAnswers[i]) || "—"}</td>`);
+    }
+
     html += `<tr>
-      <td>${new Date(r.waktu).toLocaleString("id-ID")}</td>
-      <td>${escapeHtml(r.nama||"")}</td>
-      <td>${escapeHtml(r.kelas||"")}</td>
-      <td class="score-cell">${r.skorReading} / ${r.totalReading}</td>
+      <td>${formatLocaleDate(r.waktu)}</td>
+      <td>${escapeHtml(r.nama)}</td>
+      <td>${escapeHtml(r.kelas)}</td>
+      <td class="score-cell">${r.skorReading} <span style="font-weight:400; color:#8a7b6a; font-size:11px">/${r.totalReading}</span></td>
       <td class="score-cell">${r.skorListening !== null ? r.skorListening + " / " + r.totalListening : "—"}</td>
       <td class="score-cell">${r.skorWriting !== null ? r.skorWriting + " / " + r.totalWriting : "—"}</td>
-      ${(r.writing||[]).map(w => `<td class="writing-cell">${escapeHtml(w.jawaban||"—")}</td>`).join("")}
+      ${writingCells.join("")}
     </tr>`;
   });
   html += `</tbody></table></div>`;
@@ -335,28 +408,46 @@ document.getElementById("in-search").addEventListener("input", applyFilterAndRen
 document.getElementById("btn-export-csv").addEventListener("click", () => {
   const rows = sortRows(allRows);
   if(rows.length === 0){ toast("Belum ada data untuk diekspor."); return; }
-  const writingCount = (rows[0].writing || []).length;
-  const writingCols = Array.from({length: writingCount}, (_,i)=>`W${i+1}`);
-  const header = ["Waktu","Nama","Kelas","Skor Benar","Total Soal","Listening","Susun Hanzi", ...writingCols];
-  const csvRows = [header.join(",")];
+  
+  // Header CSV
+  const writingColsCSV = [];
+  for(let i=1; i<=maxWritingAnswers; i++) writingColsCSV.push(`W${i}`);
+  
+  const header = ["Waktu Submit", "Nama", "Kelas", "Reading Benar", "Total Reading", "Skor Listening", "Skor HZ (Manual)", ...writingColsCSV];
+  
+  // Data CSV (pake BOM agar karakter cina/spesial aman di Excel)
+  let csvContent = "\uFEFF"; 
+  csvContent += header.map(h => `"${h}"`).join(",") + "\n";
+  
   rows.forEach(r => {
+    const writingAnswersRaw = [];
+    for(let i=0; i<maxWritingAnswers; i++) {
+        // Hapus breakline agar tidak merusak baris CSV
+        writingAnswersRaw.push((r.writingAnswers[i]||"").toString().replace(/\r?\n|\r/g, " "));
+    }
+
     const line = [
-      new Date(r.waktu).toLocaleString("id-ID"),
-      r.nama, r.kelas, r.skorReading, r.totalReading,
-      r.skorListening !== null ? `${r.skorListening}/${r.totalListening}` : "",
-      r.skorWriting !== null ? `${r.skorWriting}/${r.totalWriting}` : "",
-      ...(r.writing||[]).map(w => (w.jawaban||"").replace(/\n/g," "))
-    ].map(v => `"${String(v).replace(/"/g,'""')}"`);
-    csvRows.push(line.join(","));
+      formatLocaleDate(r.waktu),
+      r.nama,
+      r.kelas,
+      r.skorReading,
+      r.totalReading,
+      r.skorListening !== null ? `${r.skorListening}/${r.totalListening}` : "—",
+      r.skorWriting !== null ? `${r.skorWriting}/${r.totalWriting}` : "—",
+      ...writingAnswersRaw
+    ];
+    // Bungkus setiap nilai dengan kuotasi dan handle kuotasi di dalam nilai
+    csvContent += line.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",") + "\n";
   });
-  const blob = new Blob([csvRows.join("\n")], {type:"text/csv;charset=utf-8;"});
+  
+  const blob = new Blob([csvContent], {type:"text/csv;charset=utf-8;"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `mandarinfy-rekap-pengawas-${Date.now()}.csv`;
+  a.download = `mandarinfy-rekap-${Date.now()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  toast("CSV berhasil diunduh — bisa langsung diimpor ke Google Sheets.");
+  toast("CSV berhasil diunduh.");
 });
 </script>
 </body>
