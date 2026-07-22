@@ -164,7 +164,7 @@
 const ACCESS_CODE = "MANDARINFY2026";
 
 /* Tempel URL Web App Google Apps Script yang sama seperti di mandarinfy.html */
-const API_URL = "https://script.google.com/macros/s/AKfycbyMjjEZ-9rHmJjWQQMPTg6Cz3vtbb5c6RoI1NoaNgvavT5h6XUcI771_YB_o8EnKROI/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/exec";
 
 let sortKey = "waktu";
 let sortDir = -1; // -1 = terbaru dulu / desc
@@ -206,7 +206,7 @@ async function loadData(){
   const mount = document.getElementById("table-mount");
   mount.innerHTML = `<div class="empty-note">Memuat data…</div>`;
   try{
-    if(!API_URL || API_URL.includes("PASTE_URL")){
+    if(!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbzE2lGgx4EnMk76w69oIJm98riqBgVowMOrJXw-F0R3QPxK6Roh3aq2fRF9xbDNWYshXQ/exec")){
       mount.innerHTML = `<div class="empty-note">API_URL belum diisi. Tempel URL Google Apps Script kamu di bagian atas &lt;script&gt; pada file ini.</div>`;
       return;
     }
